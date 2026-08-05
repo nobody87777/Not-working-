@@ -1,0 +1,7 @@
+.typing-char-correct {
+    color: #10b981;
+}
+.typing-char-wrong {
+    color: #ef4444;
+    text-decoration: underline;
+}
