@@ -1,0 +1,4 @@
+.bug-line-active {
+    background-color: rgba(239, 68, 68, 0.15);
+    border-left: 3px solid #ef4444;
+}
