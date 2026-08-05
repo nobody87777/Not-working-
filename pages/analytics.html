@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Analytics - MultitaskCoder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/analytics.css">
+</head>
+<body class="dark min-h-screen p-4 max-w-md mx-auto space-y-4">
+    <header class="flex items-center justify-between py-2">
+        <a href="../index.html" class="sub-card px-3 py-1.5 rounded-xl text-xs font-bold text-purple-400">
+            <i class="fa-solid fa-arrow-left mr-1"></i> Back Home
+        </a>
+        <h1 class="font-extrabold text-sm">Analytics</h1>
+    </header>
+
+    <div class="glass-card p-5 rounded-3xl space-y-4">
+        <h3 class="font-bold text-xs">Weekly Completion Progress</h3>
+        <div class="w-full h-3 bg-black/20 rounded-full overflow-hidden">
+            <div id="analyticsXpBar" class="h-full bg-gradient-to-r from-purple-500 to-indigo-500 stat-progress-bar" style="width: 0%"></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 pt-2">
+            <div class="sub-card p-3 rounded-2xl text-center">
+                <div class="text-sm font-black text-purple-400">87%</div>
+                <div class="text-[10px] opacity-75">Accuracy</div>
+            </div>
+            <div class="sub-card p-3 rounded-2xl text-center">
+                <div class="text-sm font-black text-emerald-400">14.2 hrs</div>
+                <div class="text-[10px] opacity-75">Practice Time</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/common.js"></script>
+    <script src="../js/analytics.js"></script>
+</body>
+</html>
+
