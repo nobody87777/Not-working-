@@ -1,0 +1,14 @@
+{
+"language": "python",
+"title": "Python 3.11 Standard",
+"modules": [
+{
+"title": "Module 1: Variables & Dynamic Typing",
+"summary": "Understand dynamic reference binding, memory allocators, and variable scope."
+},
+{
+"title": "Module 2: Object-Oriented Architecture",
+"summary": "Classes, inheritance, multiple dispatch, and dunder magic methods."
+}
+]
+}
