@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theory Reference - MultitaskCoder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/theory.css">
+</head>
+<body class="dark min-h-screen p-4 max-w-md mx-auto space-y-4">
+    <header class="flex items-center justify-between py-2">
+        <a href="../index.html" class="sub-card px-3 py-1.5 rounded-xl text-xs font-bold text-purple-400">
+            <i class="fa-solid fa-arrow-left mr-1"></i> Back Home
+        </a>
+        <h1 class="font-extrabold text-sm">Theory Reference</h1>
+    </header>
+
+    <div class="glass-card p-5 rounded-3xl space-y-4">
+        <div class="flex space-x-2">
+            <button onclick="loadLanguageTheory('python')" class="flex-1 py-2 rounded-xl sub-card text-xs font-bold text-yellow-400">Python</button>
+            <button onclick="loadLanguageTheory('java')" class="flex-1 py-2 rounded-xl sub-card text-xs font-bold text-orange-400">Java</button>
+            <button onclick="loadLanguageTheory('c')" class="flex-1 py-2 rounded-xl sub-card text-xs font-bold text-blue-400">C</button>
+        </div>
+        <div id="theoryModulesList" class="space-y-3">
+            <p class="text-xs opacity-75">Select a language above to inspect modules...</p>
+        </div>
+    </div>
+
+    <script src="../js/common.js"></script>
+    <script src="../js/theory.js"></script>
+</body>
+</html>
+
