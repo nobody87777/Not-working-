@@ -1,35 +1,712 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Theory Reference - MultitaskCoder</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Theory Reference — MultitaskCoder</title>
+    <meta name="description" content="Complete C, Python, and Java programming theory — from absolute fundamentals to interview prep, with every example compiled and run.">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MultitaskCoder">
+    
+    <!-- PWA Links & External Styles -->
+    <link rel="manifest" href="../manifest.webmanifest">
+    <link rel="icon" href="../assets/icons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#090a10',
+                        cardBg: '#121422',
+                        cardHover: '#1a1d30',
+                        accentPurple: '#7c3aed',
+                        accentBlue: '#2563eb',
+                        accentCyan: '#06b6d4',
+                        neonGlow: '#8b5cf6',
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <link rel="stylesheet" href="../css/common.css">
-    <link rel="stylesheet" href="../css/theory.css">
-</head>
-<body class="dark min-h-screen p-4 max-w-md mx-auto space-y-4">
-    <header class="flex items-center justify-between py-2">
-        <a href="../index.html" class="sub-card px-3 py-1.5 rounded-xl text-xs font-bold text-purple-400">
-            <i class="fa-solid fa-arrow-left mr-1"></i> Back Home
-        </a>
-        <h1 class="font-extrabold text-sm">Theory Reference</h1>
-    </header>
 
-    <div class="glass-card p-5 rounded-3xl space-y-4">
-        <div class="flex space-x-2">
-            <button onclick="loadLanguageTheory('python')" class="flex-1 py-2 rounded-xl sub-card text-xs font-bold text-yellow-400">Python</button>
-            <button onclick="loadLanguageTheory('java')" class="flex-1 py-2 rounded-xl sub-card text-xs font-bold text-orange-400">Java</button>
-            <button onclick="loadLanguageTheory('c')" class="flex-1 py-2 rounded-xl sub-card text-xs font-bold text-blue-400">C</button>
+<style>
+/* Theory Page Styles & Responsive Enhancements */
+:root {
+  --color-indigo-300: #a5b4fc;
+  --color-indigo-400: #818cf8;
+  --color-indigo-500: #6366f1;
+  --color-slate-100: #f1f5f9;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-emerald-400: #34d399;
+  --color-rose-500: #f43f5e;
+  --color-sky-500: #0ea5e9;
+  --font-mono: 'Fira Code', monospace;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #090a10;
+  color: #f3f4f6;
+  line-height: 1.6;
+}
+
+.surface-panel {
+  background: rgba(18, 20, 34, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+}
+
+.chapter-toc details {
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.75rem;
+  background: rgba(255,255,255,0.03);
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+.chapter-toc summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+.chapter-toc summary::-webkit-details-marker { display: none; }
+.chapter-toc summary::before {
+  content: "▸";
+  color: var(--color-indigo-400);
+  margin-right: 0.5rem;
+  transition: transform 0.15s ease;
+}
+.chapter-toc details[open] summary::before { transform: rotate(90deg); }
+.chapter-toc .toc-progress {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-slate-400);
+  font-weight: 400;
+}
+.chapter-toc ul { list-style: none; padding: 0 0.75rem 0.75rem; margin: 0; }
+.chapter-toc li {
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.84rem;
+  transition: background 0.15s ease;
+}
+.chapter-toc li.done a {
+  color: var(--color-slate-100);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.chapter-toc li.done:hover { background: rgba(255,255,255,0.08); }
+.chapter-toc li.done .tick { color: var(--color-emerald-400); font-weight: 700; }
+.chapter-toc li.pending { color: var(--color-slate-500); opacity: 0.6; }
+
+.theory-content { font-size: 0.95rem; line-height: 1.75; color: var(--color-slate-100); }
+.theory-content h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 2.2rem 0 1rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  scroll-margin-top: 5.5rem;
+  color: #a7f3d0;
+}
+.theory-content > h1:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+.theory-content h2 {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 1.9rem 0 0.8rem;
+  padding-left: 0.7rem;
+  border-left: 3px solid var(--color-indigo-500);
+  scroll-margin-top: 5.5rem;
+  color: #c084fc;
+}
+.theory-content h3 {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--color-slate-400);
+  margin: 1.5rem 0 0.6rem;
+}
+.theory-content h3::before { content: "// "; color: var(--color-indigo-400); }
+.theory-content p, .theory-content li { margin: 0.5rem 0; }
+.theory-content ul, .theory-content ol { padding-left: 1.3rem; }
+.theory-content strong { color: #fff; }
+
+.theory-content code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: rgba(99,102,241,0.15);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+  color: #38bdf8;
+}
+.theory-content pre {
+  position: relative;
+  background: #070911;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.75rem;
+  padding: 1.1rem 1.2rem;
+  overflow-x: auto;
+  margin: 1.1rem 0 1.5rem;
+}
+.theory-content pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.83em;
+  line-height: 1.6;
+  color: #f3f4f6;
+}
+.theory-content pre::before {
+  content: attr(data-lang);
+  position: absolute;
+  top: 0.5rem;
+  right: 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-indigo-400);
+  opacity: 0.8;
+}
+.theory-copy-btn {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.75rem;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--color-slate-400);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+.theory-content pre:hover .theory-copy-btn { opacity: 1; }
+.theory-copy-btn:hover { background: rgba(124, 58, 237, 0.4); color: #fff; }
+
+.theory-content table { width: 100%; border-collapse: collapse; margin: 1.3rem 0; font-size: 0.85rem; }
+.theory-content th, .theory-content td {
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+.theory-content th {
+  background: rgba(99,102,241,0.2);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--color-indigo-300);
+}
+.theory-content tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+.callout {
+  border-left: 3px solid var(--color-indigo-500);
+  background: rgba(99,102,241,0.08);
+  padding: 0.85rem 1.1rem;
+  margin: 1.4rem 0;
+  border-radius: 0 0.6rem 0.6rem 0;
+  font-size: 0.88rem;
+}
+.callout p { margin: 0; }
+.callout-warning { border-left-color: var(--color-rose-500); background: rgba(244,63,94,0.08); }
+.callout-note { border-left-color: var(--color-sky-500); background: rgba(14,165,233,0.07); }
+.callout-tip { border-left-color: var(--color-emerald-400); background: rgba(52,211,153,0.07); }
+
+/* Navigation Drawer */
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 99;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.nav-overlay.active { display: block; opacity: 1; }
+.nav-drawer {
+  position: fixed;
+  top: 0; bottom: 0; left: 0;
+  width: 280px;
+  z-index: 100;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 1.5rem;
+  display: flex;
+  flex-col: column;
+}
+.nav-drawer.active { transform: translateX(0); }
+.nav-drawer-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.nav-drawer-title { font-weight: 800; font-size: 1.1rem; }
+.nav-drawer-link {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.75rem 1rem; border-radius: 0.75rem;
+  font-weight: 600; font-size: 0.875rem;
+  color: #cbd5e1; margin-bottom: 0.5rem;
+  background: rgba(255,255,255,0.03);
+  transition: all 0.2s ease;
+}
+.nav-drawer-link:hover { background: rgba(124,58,237,0.2); color: #fff; transform: translateX(4px); }
+</style>
+</head>
+<body class="dark min-h-screen pb-20">
+
+<header class="sticky top-0 z-40 flex items-center justify-between gap-3 px-4 py-3 backdrop-blur-xl border-b bg-[#090a10]/90 border-white/10 surface-panel">
+    <div class="flex items-center space-x-3">
+        <button id="menuToggleBtn" onclick="openMenu()" class="opacity-80 hover:opacity-100 p-1 text-xl transition-transform active:scale-95">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <a href="../index.html" class="flex items-center space-x-2 group">
+            <div class="bg-gradient-to-tr from-purple-600 to-indigo-500 p-2 rounded-xl text-white shadow-lg glow-purple group-hover:rotate-6 transition-transform">
+                <i class="fa-solid fa-code text-sm"></i>
+            </div>
+            <span class="font-extrabold text-lg bg-gradient-to-r from-purple-400 via-purple-300 to-indigo-400 bg-clip-text text-transparent">MultitaskCoder</span>
+        </a>
+    </div>
+    
+    <div class="flex items-center space-x-3">
+        <div class="flex items-center gap-2 rounded-full border px-3 py-1 bg-white/[0.03] border-white/10">
+            <i class="fa-solid fa-gem text-amber-400 text-xs"></i>
+            <span id="levelLabel" class="text-xs font-bold">Lvl 8</span>
+            <span id="xpLabel" class="text-[10px] text-slate-400 font-mono">870 XP</span>
         </div>
-        <div id="theoryModulesList" class="space-y-3">
-            <p class="text-xs opacity-75">Select a language above to inspect modules...</p>
+        <button onclick="toggleTheme()" id="themeToggleBtn" class="w-9 h-9 rounded-full surface-panel flex items-center justify-center text-purple-400 hover:scale-110 active:scale-95 transition-all shadow-sm">
+            <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+    </div>
+</header>
+
+<div id="slideMenuOverlay" class="nav-overlay" onclick="closeMenu()"></div>
+<nav id="slideMenuDrawer" class="nav-drawer surface-panel">
+    <div class="nav-drawer-head">
+        <div class="flex items-center space-x-2">
+            <div class="bg-gradient-to-tr from-purple-600 to-indigo-500 p-1.5 rounded-lg text-white">
+                <i class="fa-solid fa-code text-xs"></i>
+            </div>
+            <span class="nav-drawer-title">Navigation</span>
+        </div>
+        <button onclick="closeMenu()" class="w-8 h-8 rounded-full flex items-center justify-center opacity-75 hover:opacity-100">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    <a href="../index.html" class="nav-drawer-link"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="theory.html" class="nav-drawer-link"><i class="fa-solid fa-book-bookmark text-emerald-400"></i> Theory Reference</a>
+    <a href="typing.html" class="nav-drawer-link"><i class="fa-solid fa-bolt text-amber-400"></i> Speed Typing</a>
+    <a href="debugger.html" class="nav-drawer-link"><i class="fa-solid fa-bug text-rose-400"></i> Debugger Arena</a>
+    <a href="quizzes.html" class="nav-drawer-link"><i class="fa-solid fa-bullseye text-purple-400"></i> Brain Quizzes</a>
+    <a href="analytics.html" class="nav-drawer-link"><i class="fa-solid fa-chart-line text-blue-400"></i> Performance Analytics</a>
+</nav>
+
+<main class="max-w-3xl mx-auto px-4 pt-6 space-y-6">
+    <a href="../index.html" class="inline-flex items-center text-xs font-semibold text-purple-400 hover:text-purple-300 transition-colors">
+        <i class="fa-solid fa-arrow-left mr-2"></i> Back to Home
+    </a>
+
+    <div class="flex items-center space-x-4">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center text-white text-xl shadow-lg glow-purple">
+            <i class="fa-solid fa-book-open"></i>
+        </div>
+        <div>
+            <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">Theory Reference</h1>
+            <p class="text-xs text-slate-400 mt-0.5">Complete C, Python &amp; Java — every example compiled and run.</p>
         </div>
     </div>
 
-    <script src="../js/common.js"></script>
-    <script src="../js/theory.js"></script>
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-3 gap-3">
+        <div class="surface-panel p-3 rounded-2xl text-center">
+            <div class="text-base font-extrabold text-emerald-400" id="statChapters">23 / 72</div>
+            <div class="text-[10px] text-slate-400">Chapters Available</div>
+        </div>
+        <div class="surface-panel p-3 rounded-2xl text-center">
+            <div class="text-base font-extrabold text-purple-400" id="statCompletion">32%</div>
+            <div class="text-[10px] text-slate-400">Total Completion</div>
+        </div>
+        <div class="surface-panel p-3 rounded-2xl text-center">
+            <div class="text-base font-extrabold text-cyan-400">C &amp; Python</div>
+            <div class="text-[10px] text-slate-400">Active Core</div>
+        </div>
+    </div>
+
+    <div class="surface-panel p-4 rounded-2xl space-y-3">
+        <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-purple-400">Search &amp; Table of Contents</span>
+            <span class="text-[10px] text-slate-400">Interactive Index</span>
+        </div>
+        
+        <!-- Live Filter Search Box -->
+        <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-slate-400"></i>
+            <input type="text" id="chapterSearchInput" placeholder="Filter chapters or topics (e.g. pointers, loops, recursion)..." onkeyup="filterTheoryChapters()" class="w-full bg-black/40 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs focus:outline-none focus:border-purple-500 transition-colors">
+        </div>
+
+        <div class="chapter-toc space-y-2 pt-1" id="tocContainer">
+            <details open>
+                <summary><span>Complete C Programming</span><span class="toc-progress">20/20</span></summary>
+                <ul class="space-y-1">
+                    <li class="done"><a href="#chapter-1-introduction-to-c"><span class="tick">✓</span> Ch.1 — Introduction to C</a></li>
+                    <li class="done"><a href="#chapter-2-tokens-keywords-identifiers-constants--variables"><span class="tick">✓</span> Ch.2 — Tokens, Keywords, Identifiers &amp; Variables</a></li>
+                    <li class="done"><a href="#chapter-3-data-types--storage-classes"><span class="tick">✓</span> Ch.3 — Data Types &amp; Storage Classes</a></li>
+                    <li class="done"><a href="#chapter-4-operators-expressions--type-conversion"><span class="tick">✓</span> Ch.4 — Operators, Expressions &amp; Type Conversion</a></li>
+                    <li class="done"><a href="#chapter-5-inputoutput--escape-sequences"><span class="tick">✓</span> Ch.5 — Input/Output &amp; Escape Sequences</a></li>
+                    <li class="done"><a href="#chapter-6-decision-making"><span class="tick">✓</span> Ch.6 — Decision Making (if / switch)</a></li>
+                    <li class="done"><a href="#chapter-7-loops"><span class="tick">✓</span> Ch.7 — Loops (while, do-while, for, nested)</a></li>
+                    <li class="done"><a href="#chapter-8-jump-statements"><span class="tick">✓</span> Ch.8 — Jump Statements (break, continue, goto)</a></li>
+                    <li class="done"><a href="#chapter-9-functions--recursion"><span class="tick">✓</span> Ch.9 — Functions &amp; Recursion</a></li>
+                    <li class="done"><a href="#chapter-10-arrays"><span class="tick">✓</span> Ch.10 — Arrays (1D, 2D, multi-dimensional)</a></li>
+                    <li class="done"><a href="#chapter-11-strings--character-arrays"><span class="tick">✓</span> Ch.11 — Strings &amp; Character Arrays</a></li>
+                    <li class="done"><a href="#chapter-12-pointers-part-1-of-2--fundamentals--arithmetic"><span class="tick">✓</span> Ch.12 — Pointers (Part 1 &amp; 2)</a></li>
+                    <li class="done"><a href="#chapter-13-dynamic-memory-allocation"><span class="tick">✓</span> Ch.13 — Dynamic Memory Allocation</a></li>
+                    <li class="done"><a href="#chapter-14-structures-unions-enums-typedef-bit-fields"><span class="tick">✓</span> Ch.14 — Structures, Unions, Enums &amp; Bit Fields</a></li>
+                    <li class="done"><a href="#chapter-15-file-handling"><span class="tick">✓</span> Ch.15 — File Handling</a></li>
+                    <li class="done"><a href="#chapter-16-command-line-arguments"><span class="tick">✓</span> Ch.16 — Command-Line Arguments</a></li>
+                    <li class="done"><a href="#chapter-17-preprocessor-directives--macros"><span class="tick">✓</span> Ch.17 — Preprocessor Directives &amp; Macros</a></li>
+                    <li class="done"><a href="#chapter-18-compilation-linking--execution"><span class="tick">✓</span> Ch.18 — Compilation, Linking &amp; Execution</a></li>
+                    <li class="done"><a href="#chapter-19-error-handling--undefined-behaviour"><span class="tick">✓</span> Ch.19 — Error Handling &amp; Undefined Behaviour</a></li>
+                    <li class="done"><a href="#chapter-20-best-practices-coding-standards--interview-preparation"><span class="tick">✓</span> Ch.20 — Best Practices &amp; Interview Prep</a></li>
+                </ul>
+            </details>
+            <details open>
+                <summary><span>Complete Python Programming</span><span class="toc-progress">3/18</span></summary>
+                <ul class="space-y-1">
+                    <li class="done"><a href="#chapter-21-introduction-to-python"><span class="tick">✓</span> Ch.21 — Introduction to Python</a></li>
+                    <li class="done"><a href="#chapter-22-syntax-variables--data-types-part-1-of-2--variables-numbers-strings"><span class="tick">✓</span> Ch.22 — Syntax, Variables &amp; Core Collections</a></li>
+                    <li class="done"><a href="#chapter-23-operators-inputoutput--formatting"><span class="tick">✓</span> Ch.23 — Operators, I/O &amp; Formatting</a></li>
+                </ul>
+            </details>
+        </div>
+    </div>
+
+<div class="surface-panel p-6 rounded-3xl theory-content space-y-4" id="theoryBody">
+<h1 id="chapter-1-introduction-to-c">Chapter 1: Introduction to C</h1>
+<h2 id="11-definition--what-is-c">1.1 Definition — What is C?</h2>
+<p><strong>C</strong> is a general-purpose, procedural, statically-typed, compiled programming language. "Procedural" means a C program is built from a sequence of instructions organized into functions; "statically-typed" means every variable's type is fixed at compile time; "compiled" means source code is translated into machine code by a compiler <em>before</em> the program runs, rather than being interpreted line-by-line.</p>
+<h2 id="12-history-of-c">1.2 History of C</h2>
+<ul>
+<li><strong>1969–1973</strong>: Dennis Ritchie developed C at Bell Labs, evolving it from an earlier language called B (itself derived from BCPL).</li>
+<li><strong>Purpose at creation</strong>: C was built to rewrite the UNIX operating system, which had originally been written in assembly language. This is why C gives programmers low-level control (like assembly) while still being readable.</li>
+<li><strong>1978</strong>: Brian Kernighan and Dennis Ritchie published <em>The C Programming Language</em>.</li>
+<li><strong>1989/1990</strong>: Standardized as <strong>ANSI C / C89</strong> (and ISO C90 internationally).</li>
+<li><strong>Later standards</strong>: C99, C11, C17, C23 added modern extensions while maintaining backward compatibility.</li>
+</ul>
+<blockquote class="callout callout-note">
+<p>📝 <strong>Note:</strong> C is often called the <strong>"mother language"</strong> of programming because compilers/interpreters for many later languages (C++, Java, Python's CPython, PHP) were written in C.</p>
+</blockquote>
+
+<h2 id="18-structure-of-a-c-program">1.8 Structure of a C Program</h2>
+<p>Every C program follows a clean, predictable structure:</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main(void) {
+    printf("Hello, World!\n");
+    return 0;
+}</code></pre>
+<p>Line-by-line explanation:</p>
+<ol>
+<li><code>#include &lt;stdio.h&gt;</code> — A preprocessor directive including standard I/O function declarations.</li>
+<li><code>int main(void)</code> — Execution entry point for the operating system.</li>
+<li><code>printf("Hello, World!\n");</code> — Prints the string to stdout with a newline.</li>
+<li><code>return 0;</code> — Signals successful execution back to the host operating system.</li>
+</ol>
+
+<h1 id="chapter-2-tokens-keywords-identifiers-constants--variables">Chapter 2: Tokens, Keywords, Identifiers, Constants &amp; Variables</h1>
+<h2 id="21-tokens">2.1 Tokens</h2>
+<p>A token is the smallest individual unit in C that the compiler recognizes. The C language contains 6 types of tokens: Keywords, Identifiers, Constants, String Literals, Operators, and Punctuators.</p>
+<h2 id="25-variables">2.5 Variables</h2>
+<p>A variable is a named memory location that holds a value of a specific data type.</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main(void) {
+    int age = 20;
+    float height = 5.9;
+    char grade = 'A';
+
+    printf("Age: %d, Height: %.1f, Grade: %c\n", age, height, grade);
+    return 0;
+}</code></pre>
+
+<h1 id="chapter-3-data-types--storage-classes">Chapter 3: Data Types &amp; Storage Classes</h1>
+<h2 id="31-data-types">3.1 Data Types</h2>
+<p>C provides fundamental data types: <code>int</code>, <code>char</code>, <code>float</code>, <code>double</code>, and <code>void</code>. Modifiers such as <code>signed</code>, <code>unsigned</code>, <code>short</code>, and <code>long</code> tailor memory ranges.</p>
+
+<h2 id="32-storage-classes">3.2 Storage Classes</h2>
+<p>Storage classes dictate lifetime, scope, and initial values:</p>
+<table>
+<thead>
+<tr>
+<th>Storage Class</th>
+<th>Default Value</th>
+<th>Stored In</th>
+<th>Scope</th>
+<th>Lifetime</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><code>auto</code></td><td>Garbage</td><td>Stack</td><td>Local block</td><td>Function execution</td></tr>
+<tr><td><code>static</code></td><td>Zero</td><td>Data segment</td><td>Block / File</td><td>Entire program run</td></tr>
+<tr><td><code>extern</code></td><td>Zero</td><td>Data segment</td><td>Global across files</td><td>Entire program run</td></tr>
+<tr><td><code>register</code></td><td>Garbage</td><td>CPU Register</td><td>Local block</td><td>Function execution</td></tr>
+</tbody>
+</table>
+
+<h1 id="chapter-4-operators-expressions--type-conversion">Chapter 4: Operators, Expressions &amp; Type Conversion</h1>
+<p>C features rich arithmetic, relational, logical, bitwise, assignment, and ternary operators. Operator precedence dictates execution order when expressions omit parentheses.</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main(void) {
+    int a = 17, b = 5;
+    printf("a / b = %d (integer division)\n", a / b);
+    printf("(float)a / b = %.2f (explicit cast)\n", (float)a / b);
+    return 0;
+}</code></pre>
+
+<h1 id="chapter-5-inputoutput--escape-sequences">Chapter 5: Input/Output &amp; Escape Sequences</h1>
+<p>Input and output operations are handled via <code>&lt;stdio.h&gt;</code> functions such as <code>printf()</code>, <code>scanf()</code>, <code>getchar()</code>, <code>putchar()</code>, and <code>fgets()</code>.</p>
+<blockquote class="callout callout-warning">
+<p>⚠️ <strong>Warning:</strong> Always check <code>scanf()</code> return values and prefer <code>fgets()</code> over the obsolete, unsafe <code>gets()</code>.</p>
+</blockquote>
+
+<h1 id="chapter-6-decision-making">Chapter 6: Decision Making</h1>
+<p>Conditional control flow executes branches based on truth values (non-zero is true; zero is false).</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main(void) {
+    int score = 85;
+    if (score &gt;= 90) {
+        printf("Grade A\n");
+    } else if (score &gt;= 80) {
+        printf("Grade B\n");
+    } else {
+        printf("Grade C or lower\n");
+    }
+    return 0;
+}</code></pre>
+
+<h1 id="chapter-7-loops">Chapter 7: Loops</h1>
+<p>C provides three looping structures: entry-controlled <code>while</code> and <code>for</code> loops, and exit-controlled <code>do-while</code> loops.</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main(void) {
+    for (int i = 1; i &lt;= 5; i++) {
+        printf("%d ", i);
+    }
+    printf("\n");
+    return 0;
+}</code></pre>
+
+<h1 id="chapter-8-jump-statements">Chapter 8: Jump Statements</h1>
+<p>Control flow jump statements include <code>break</code> (exits nearest loop/switch), <code>continue</code> (skips iteration), and <code>goto</code> (transfers execution to a named label within the function).</p>
+
+<h1 id="chapter-9-functions--recursion">Chapter 9: Functions &amp; Recursion</h1>
+<p>Functions promote modularity and code reuse. C passes arguments strictly <strong>by value</strong>.</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int factorial(int n) {
+    if (n &lt;= 1) return 1;
+    return n * factorial(n - 1);
+}
+
+int main(void) {
+    printf("5! = %d\n", factorial(5));
+    return 0;
+}</code></pre>
+
+<h1 id="chapter-10-arrays">Chapter 10: Arrays</h1>
+<p>Arrays store contiguous elements of identical data types in memory with 0-indexed bounds.</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main(void) {
+    int numbers[5] = {10, 20, 30, 40, 50};
+    for (int i = 0; i &lt; 5; i++) {
+        printf("numbers[%d] = %d\n", i, numbers[i]);
+    }
+    return 0;
+}</code></pre>
+
+<h1 id="chapter-11-strings--character-arrays">Chapter 11: Strings &amp; Character Arrays</h1>
+<p>In C, strings are null-terminated (<code>'\0'</code>) character arrays. Always compare content with <code>strcmp()</code>, never <code>==</code>.</p>
+
+<h1 id="chapter-12-pointers-part-1-of-2--fundamentals--arithmetic">Chapter 12: Pointers</h1>
+<p>Pointers hold memory addresses. Use <code>&amp;</code> to fetch an address and <code>*</code> to dereference.</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int main(void) {
+    int x = 5, y = 10;
+    swap(&amp;x, &amp;y);
+    printf("x = %d, y = %d\n", x, y);
+    return 0;
+}</code></pre>
+
+<h1 id="chapter-13-dynamic-memory-allocation">Chapter 13: Dynamic Memory Allocation</h1>
+<p>Heap memory is allocated dynamically at runtime via <code>malloc()</code>, <code>calloc()</code>, and <code>realloc()</code>, and released via <code>free()</code>.</p>
+
+<h1 id="chapter-14-structures-unions-enums-typedef-bit-fields">Chapter 14: Structures, Unions, Enums &amp; Bit Fields</h1>
+<p><code>struct</code> groups heterogeneous fields in contiguous memory; <code>union</code> overlays fields sharing the same space; <code>enum</code> defines named integer constants.</p>
+
+<h1 id="chapter-15-file-handling">Chapter 15: File Handling</h1>
+<p>Persistent storage is accessed via <code>FILE*</code> handles using modes (<code>"r"</code>, <code>"w"</code>, <code>"a"</code>, <code>"rb"</code>, <code>"wb"</code>) with functions like <code>fprintf()</code>, <code>fgets()</code>, <code>fread()</code>, and <code>fwrite()</code>.</p>
+
+<h1 id="chapter-16-command-line-arguments">Chapter 16: Command-Line Arguments</h1>
+<p><code>int main(int argc, char *argv[])</code> receives command-line arguments passed at startup.</p>
+
+<h1 id="chapter-17-preprocessor-directives--macros">Chapter 17: Preprocessor Directives &amp; Macros</h1>
+<p>Pre-compilation text manipulation via <code>#include</code>, <code>#define</code>, and header guards (<code>#ifndef</code> / <code>#define</code> / <code>#endif</code>).</p>
+
+<h1 id="chapter-18-compilation-linking--execution">Chapter 18: Compilation, Linking &amp; Execution</h1>
+<p>The build pipeline progresses through four distinct stages: Preprocessing → Compilation → Assembly → Linking.</p>
+
+<h1 id="chapter-19-error-handling--undefined-behaviour">Chapter 19: Error Handling &amp; Undefined Behaviour</h1>
+<p>C relies on <code>errno</code> and return values. Undefined behavior (signed overflow, out-of-bounds access) should be detected with AddressSanitizer (<code>-fsanitize=address</code>).</p>
+
+<h1 id="chapter-20-best-practices-coding-standards--interview-preparation">Chapter 20: Best Practices &amp; Interview Prep</h1>
+<p>Consolidated defensive programming rules: initialize variables, check allocation pointers, parenthesize macro parameters, and maintain consistent formatting.</p>
+
+<h1 id="chapter-21-introduction-to-python">Chapter 21: Introduction to Python</h1>
+<p>Python is a high-level, interpreted, dynamically-typed language prioritizing legibility and rapid development.</p>
+<pre><code class="language-python"># Python Hello World
+print("Hello, World!")</code></pre>
+
+<h1 id="chapter-22-syntax-variables--data-types-part-1-of-2--variables-numbers-strings">Chapter 22: Syntax, Variables &amp; Core Collections</h1>
+<p>Python variables bind names to objects. Primitive numbers have arbitrary precision, and core collections include mutable <code>list</code>, immutable <code>tuple</code>, unique <code>set</code>, and key-value <code>dict</code>.</p>
+<pre><code class="language-python"># List Comprehension Example
+squares = [x**2 for x in range(1, 6)]
+print(f"Squares: {squares}")</code></pre>
+
+<h1 id="chapter-23-operators-inputoutput--formatting">Chapter 23: Operators, I/O &amp; Formatting</h1>
+<p>Python supports true division (<code>/</code>), floor division (<code>//</code>), exponentiation (<code>**</code>), f-string formatting, and safe input reading via <code>input()</code>.</p>
+<pre><code class="language-python">name = input("Enter name: ")
+print(f"Hello, {name}!")</code></pre>
+</div>
+</main>
+
+<script src="../js/common.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Initialize syntax highlighting
+    if (window.hljs) {
+        hljs.highlightAll();
+    }
+
+    // 2. Setup Code Block Language Badges & Copy Buttons
+    document.querySelectorAll('.theory-content pre').forEach(function(pre) {
+        var codeEl = pre.querySelector('code');
+        var m = codeEl && codeEl.className.match(/language-(\w+)/);
+        pre.setAttribute('data-lang', m ? m[1] : 'output');
+
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'theory-copy-btn';
+        btn.innerHTML = '<i class="fa-regular fa-copy"></i> copy';
+        
+        btn.addEventListener('click', function() {
+            var text = codeEl ? codeEl.innerText : pre.innerText;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function() {
+                    btn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> copied';
+                    setTimeout(function() { btn.innerHTML = '<i class="fa-regular fa-copy"></i> copy'; }, 1500);
+                });
+            } else {
+                // Fallback copy
+                var textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                btn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> copied';
+                setTimeout(function() { btn.innerHTML = '<i class="fa-regular fa-copy"></i> copy'; }, 1500);
+            }
+        });
+        pre.appendChild(btn);
+    });
+
+    // 3. Sync User XP & Stats from localStorage
+    if (localStorage.getItem('userXP')) {
+        var xp = parseInt(localStorage.getItem('userXP'), 10) || 870;
+        var xpLabel = document.getElementById('xpLabel');
+        if (xpLabel) xpLabel.innerText = xp + ' XP';
+    }
+});
+
+function openMenu() {
+    var overlay = document.getElementById('slideMenuOverlay');
+    var drawer = document.getElementById('slideMenuDrawer');
+    if (overlay && drawer) {
+        overlay.classList.add('active');
+        drawer.classList.add('active');
+    }
+}
+
+function closeMenu() {
+    var overlay = document.getElementById('slideMenuOverlay');
+    var drawer = document.getElementById('slideMenuDrawer');
+    if (overlay && drawer) {
+        overlay.classList.remove('active');
+        drawer.classList.remove('active');
+    }
+}
+
+function filterTheoryChapters() {
+    var input = document.getElementById('chapterSearchInput');
+    if (!input) return;
+    var filter = input.value.toLowerCase().trim();
+    var detailsList = document.querySelectorAll('.chapter-toc details');
+
+    detailsList.forEach(function(details) {
+        var items = details.querySelectorAll('li');
+        var matchCount = 0;
+
+        items.forEach(function(item) {
+            var text = item.innerText.toLowerCase();
+            if (text.includes(filter)) {
+                item.style.display = '';
+                matchCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        if (filter.length > 0) {
+            if (matchCount > 0) {
+                details.style.display = '';
+                details.open = true;
+            } else {
+                details.style.display = 'none';
+            }
+        } else {
+            details.style.display = '';
+            items.forEach(function(item) { item.style.display = ''; });
+        }
+    });
+}
+</script>
 </body>
 </html>
-
