@@ -1,0 +1,45 @@
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+body.dark {
+    background-color: #090a10;
+    color: #f3f4f6;
+}
+body:not(.dark) {
+    background-color: #f8fafc;
+    color: #0f172a;
+}
+.glass-card {
+    background: rgba(18, 20, 34, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+}
+.sub-card {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.code-box {
+    background: #0b0c10;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.code-font {
+    font-family: 'Fira Code', monospace;
+}
+.glow-purple {
+    box-shadow: 0 0 25px rgba(124, 58, 237, 0.4);
+}
+.glow-btn {
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease forwards;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
