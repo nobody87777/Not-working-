@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Daily Task - Level Up Your Life</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Bebas Neue, Russo One, Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=Russo+One&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            gta: {
+              bg: '#090d16',
+              card: '#111726',
+              cardLight: '#182035',
+              border: '#1f2b42',
+              neonGreen: '#10b981',
+              neonMint: '#00e5a3',
+              neonBlue: '#00b4d8',
+              gold: '#f59e0b',
+              purple: '#8b5cf6',
+              pink: '#ec4899',
+            }
+          },
+          fontFamily: {
+            gta: ['"Russo One"', '"Bebas Neue"', 'sans-serif'],
+            bebas: ['"Bebas Neue"', 'sans-serif'],
+            sans: ['"Inter"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #05070d;
+      color: #f1f5f9;
+      overflow-x: hidden;
+    }
+
+    /* Custom GTA Text styling */
+    .font-mission {
+      font-family: 'Russo One', sans-serif;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 229, 163, 0.4);
+    }
+    
+    .font-gta-title {
+      font-family: 'Russo One', sans-serif;
+      letter-spacing: 1px;
+    }
+
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+
+    /* Radar sweep animation */
+    @keyframes radarSweep {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .radar-sweep-anim {
+      animation: radarSweep 3s linear infinite;
+      transform-origin: 50% 50%;
+    }
+
+    /* Pulsing glow */
+    @keyframes subtlePulse {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+    .glow-pulse {
+      animation: subtlePulse 2.5s infinite ease-in-out;
+    }
+
+    /* Background Themes */
+    .theme-sunset {
+      background: radial-gradient(circle at 50% 10%, rgba(249, 115, 22, 0.15), transparent 60%),
+                  radial-gradient(circle at 80% 30%, rgba(236, 72, 153, 0.12), transparent 50%),
+                  linear-gradient(180deg, #0d111d 0%, #080b13 100%);
+    }
+    .theme-night {
+      background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.2), transparent 70%),
+                  linear-gradient(180deg, #090c17 0%, #030509 100%);
+    }
+    .theme-vice {
+      background: radial-gradient(circle at 20% 10%, rgba(236, 72, 153, 0.22), transparent 60%),
+                  radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.2), transparent 60%),
+                  linear-gradient(180deg, #100d1c 0%, #07060e 100%);
+    }
+    .theme-snow {
+      background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.22), transparent 70%),
+                  linear-gradient(180deg, #0c1424 0%, #060a12 100%);
+    }
+    .theme-desert {
+      background: radial-gradient(circle at 50% 10%, rgba(245, 158, 11, 0.2), transparent 70%),
+                  linear-gradient(180deg, #16110a 0%, #0a0703 100%);
+    }
+    .theme-forest {
+      background: radial-gradient(circle at 50% 10%, rgba(16, 185, 129, 0.2), transparent 70%),
+                  linear-gradient(180deg, #081510 0%, #040907 100%);
+    }
+
+    /* Modal Backdrop Blur */
+    .modal-backdrop {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-slate-950 flex justify-center items-center sm:p-4 text-slate-100">
+
+  <!-- Main Mobile / Desktop App Wrapper (Fixed max-w for pixel-perfect mobile-first GTA UI) -->
+  <div id="appContainer" class="theme-sunset w-full max-w-[440px] h-[100dvh] sm:h-[890px] sm:rounded-[38px] border border-slate-800 shadow-2xl relative flex flex-col overflow-hidden sm:ring-8 sm:ring-slate-900/60">
+
+    <!-- Ambient City Horizon Backdrop Vector (Sunset Palm Trees & Skyline) -->
+    <div id="horizonArt" class="absolute inset-x-0 top-0 h-72 pointer-events-none opacity-40 overflow-hidden z-0 transition-opacity duration-700">
+      <svg class="w-full h-full object-cover" viewBox="0 0 500 240" fill="none" preserveAspectRatio="none">
+        <!-- Sun Gradient -->
+        <circle cx="250" cy="110" r="70" fill="url(#sunGlow)" opacity="0.65" />
+        <!-- Skyline Silhouettes -->
+        <path d="M0,240 L0,180 L20,180 L20,150 L35,150 L35,180 L70,180 L70,130 L95,130 L95,180 L130,180 L130,110 L150,110 L150,180 L200,180 L200,80 L220,80 L220,180 L280,180 L280,100 L305,100 L305,180 L350,180 L350,140 L370,140 L370,180 L420,180 L420,120 L440,120 L440,180 L500,180 L500,240 Z" fill="#0b0f19" fill-opacity="0.85" />
+        <!-- Palms & Details -->
+        <path d="M40,240 Q45,170 30,130 M30,130 Q10,120 5,140 M30,130 Q25,105 10,115 M30,130 Q45,100 55,115 M30,130 Q55,125 50,145" stroke="#05070d" stroke-width="4" stroke-linecap="round" fill="none" />
+        <path d="M460,240 Q455,160 470,120 M470,120 Q485,110 495,130 M470,120 Q480,95 495,105 M470,120 Q455,90 445,105 M470,120 Q445,115 450,135" stroke="#05070d" stroke-width="4" stroke-linecap="round" fill="none" />
+        <!-- Helicopter silhouette -->
+        <path d="M370,65 L395,65 M382,65 L382,70 L395,73 A6,6 0 0,1 390,83 L375,83 L365,75 Z M365,75 L350,75 L350,72 L365,74 Z M350,71 L350,76 M372,83 L372,86 L392,86" stroke="#030509" stroke-width="2" fill="#030509" />
+        <defs>
+          <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.9" />
+            <stop offset="60%" stop-color="#ec4899" stop-opacity="0.5" />
+            <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <header class="relative z-10 px-5 pt-5 pb-3 flex items-center justify-between border-b border-white/5 bg-slate-950/40 backdrop-blur-md">
+      <!-- Player Profile & XP Bar -->
+      <div class="flex items-center gap-3">
+        <!-- Avatar with neon ring -->
+        <div class="relative cursor-pointer group" onclick="switchView('view-settings')">
+          <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-gta-neonMint shadow-lg shadow-gta-neonMint/20 bg-slate-800 flex items-center justify-center">
+            <!-- Stylized GTA Character Silhouette -->
+            <img id="playerAvatarImg" src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=120&auto=format&fit=crop&q=80" alt="Jayadev" data-avatar="true" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/10b981/ffffff?text=JD'">
+          </div>
+          <!-- Tiny level badge overlay -->
+          <span class="absolute -bottom-1 -right-1 bg-slate-900 border border-gta-neonMint text-gta-neonMint text-[9px] font-black px-1 rounded-full font-gta-title">
+            <span id="badgeLevel">12</span>
+          </span>
+        </div>
+
+        <!-- Name & XP Progress -->
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <span id="playerName" class="font-bold text-sm text-white tracking-wide">Jayadev</span>
+            <span class="text-[10px] text-gta-neonMint font-extrabold uppercase bg-emerald-500/10 border border-emerald-500/30 px-1.5 py-0.2 rounded">
+              Lv. <span id="textLevel">12</span>
+            </span>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="w-28 sm:w-32 mt-1">
+            <div class="w-full bg-slate-800/80 rounded-full h-1.5 overflow-hidden border border-white/10">
+              <div id="topXpBar" class="bg-gradient-to-r from-teal-400 to-gta-neonMint h-full rounded-full transition-all duration-500" style="width: 64%;"></div>
+            </div>
+            <div class="flex justify-between text-[9px] text-slate-400 mt-0.5 font-medium">
+              <span><span id="topXpCurrent">320</span> / <span id="topXpTarget">500</span> XP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Currency: Cash and Stars -->
+      <div class="flex items-center gap-2.5">
+        <!-- Cash Badge -->
+        <div class="flex items-center gap-1 bg-slate-900/90 border border-emerald-500/30 px-2.5 py-1 rounded-xl shadow-inner shadow-emerald-500/10">
+          <span class="text-gta-neonMint font-black text-sm">$</span>
+          <span id="playerCash" class="font-extrabold text-xs text-slate-100 tracking-wider">2,450</span>
+        </div>
+
+        <!-- Star Badge -->
+        <div class="flex items-center gap-1 bg-slate-900/90 border border-amber-500/30 px-2 py-1 rounded-xl shadow-inner shadow-amber-500/10">
+          <i class="fa-solid fa-star text-amber-400 text-xs animate-pulse"></i>
+          <span id="playerStars" class="font-extrabold text-xs text-amber-300">2</span>
+        </div>
+      </div>
+    </header>
+
+    <main id="mainScrollArea" class="flex-1 overflow-y-auto relative z-10 px-5 pt-3 pb-24 space-y-4">
+
+      <!-- ================= VIEW 1: HOME ================= -->
+      <section id="view-home" class="space-y-4">
+        <!-- Page Title & Real-time Simulated Date -->
+        <div class="flex items-center justify-between pt-1">
+          <h1 class="text-2xl font-black font-gta-title tracking-wide text-white">Home</h1>
+          <div class="text-right">
+            <div id="liveDateStr" class="text-[11px] font-semibold text-slate-300">Tue, 17 Sep 2026</div>
+            <div class="flex items-center justify-end gap-1.5 text-[10px] text-amber-400 font-mono">
+              <span id="liveTimeStr">06:42 AM</span>
+              <i class="fa-solid fa-sun text-xs text-amber-400"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Today's Progress Card with Circular Tracker -->
+        <div class="bg-gta-card/90 backdrop-blur-md rounded-2xl p-4 border border-gta-border shadow-xl relative overflow-hidden group hover:border-slate-600/60 transition-all">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-sm font-bold text-slate-200 tracking-wide">Today's Progress</h2>
+            <button onclick="triggerMissionComplete()" title="Preview the GTA Mission Passed screen without claiming rewards" class="text-[10px] bg-emerald-500/10 border border-emerald-500/40 text-gta-neonMint hover:bg-emerald-500/20 px-2 py-0.5 rounded-full transition flex items-center gap-1">
+              <i class="fa-solid fa-flag-checkered"></i> Test Victory
+            </button>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <!-- Circular Progress Chart -->
+            <div class="relative w-24 h-24 flex-shrink-0 flex items-center justify-center">
+              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                <!-- Background track -->
+                <path class="text-slate-800" stroke-width="3.6" stroke="currentColor" fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <!-- Progress circle -->
+                <path id="progressCircle" class="text-gta-neonMint stroke-current transition-all duration-700 ease-out"
+                  stroke-dasharray="50, 100" stroke-width="3.6" stroke-linecap="round" fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              </svg>
+              <!-- Center Text inside circle -->
+              <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <span id="circleRatioText" class="text-base font-black text-white leading-none">4/8</span>
+                <span class="text-[8px] text-slate-400 font-medium mt-0.5">Tasks Done</span>
+              </div>
+            </div>
+
+            <!-- Motivational Quote Card -->
+            <div class="flex-1 bg-slate-900/60 rounded-xl p-3 border border-white/5 flex flex-col justify-between">
+              <p id="motivationalQuote" class="text-xs italic text-slate-300 font-medium leading-relaxed">
+                “Small steps every day lead to big results.”
+              </p>
+              <div class="flex items-center justify-end mt-2">
+                <span class="text-amber-400 text-xs">
+                  <i class="fa-solid fa-crown"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Today's Tasks Section -->
+        <div class="space-y-2.5">
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-bold text-slate-200 tracking-wide">Today's Tasks</h2>
+            <span id="tasksRemainingBadge" class="text-[10px] text-slate-400 font-medium bg-slate-900 px-2 py-0.5 rounded-full border border-white/5">
+              4 pending
+            </span>
+          </div>
+
+          <!-- Dynamic Tasks List -->
+          <div id="homeTaskList" class="space-y-2">
+            <!-- Rendered by JavaScript -->
+          </div>
+
+          <!-- Add New Task Gradient Button -->
+          <button onclick="openAddTaskModal()" class="w-full py-3 mt-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 border border-indigo-400/30 flex items-center justify-center gap-2 active:scale-[0.98] transition">
+            <i class="fa-solid fa-plus text-xs"></i> Add New Task
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 2: TASKS ================= -->
+      <section id="view-tasks" class="space-y-4 hidden">
+        <div class="flex items-center justify-between pt-1">
+          <h1 class="text-2xl font-black font-gta-title tracking-wide text-white">Tasks</h1>
+          <button onclick="openAddTaskModal()" class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 text-gta-neonMint hover:bg-slate-700 flex items-center justify-center transition">
+            <i class="fa-solid fa-ellipsis"></i>
+          </button>
+        </div>
+
+        <!-- Task Filter Pills -->
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+          <button onclick="setTaskFilter('all')" data-filter="all" class="task-filter-btn px-3.5 py-1.5 rounded-full text-xs font-bold border transition bg-gta-neonMint text-slate-950 border-gta-neonMint shadow-sm shadow-gta-neonMint/30">
+            All
+          </button>
+          <button onclick="setTaskFilter('today')" data-filter="today" class="task-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold border transition bg-slate-900/80 text-slate-400 border-white/10 hover:border-slate-600">
+            Today
+          </button>
+          <button onclick="setTaskFilter('upcoming')" data-filter="upcoming" class="task-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold border transition bg-slate-900/80 text-slate-400 border-white/10 hover:border-slate-600">
+            Upcoming
+          </button>
+          <button onclick="setTaskFilter('completed')" data-filter="completed" class="task-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold border transition bg-slate-900/80 text-slate-400 border-white/10 hover:border-slate-600">
+            Completed
+          </button>
+        </div>
+
+        <!-- Filtered Task Cards List -->
+        <div id="fullTaskList" class="space-y-2.5">
+          <!-- Rendered by JavaScript -->
+        </div>
+
+        <!-- Quick Quick Add Floating helper -->
+        <div class="pt-2 text-center">
+          <button onclick="openAddTaskModal()" class="text-xs font-semibold text-gta-neonMint hover:underline flex items-center justify-center gap-1.5 mx-auto">
+            <i class="fa-solid fa-circle-plus"></i> Create Custom Habit
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 3: STATS ================= -->
+      <section id="view-stats" class="space-y-4 hidden">
+        <div class="flex items-center justify-between pt-1">
+          <h1 class="text-2xl font-black font-gta-title tracking-wide text-white">Stats</h1>
+          <div class="text-right text-[10px] text-slate-400">
+            <div id="statsDateStr">--</div>
+            <div id="statsTimeStr" class="text-amber-400 font-mono">--</div>
+          </div>
+        </div>
+
+        <!-- Big Profile Level Banner -->
+        <div class="bg-gta-card/90 rounded-2xl p-4 border border-gta-border shadow-xl flex items-center gap-4">
+          <div class="relative">
+            <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-gta-neonMint shadow-md shadow-gta-neonMint/30 bg-slate-800">
+              <img src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=160&auto=format&fit=crop&q=80" alt="Jayadev" data-avatar="true" class="w-full h-full object-cover">
+            </div>
+            <span class="absolute -bottom-1 -right-1 bg-slate-900 border border-gta-neonMint text-gta-neonMint text-[10px] font-black px-1.5 rounded-full font-gta-title">12</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h3 id="statsPlayerName" class="text-base font-bold text-white">Jayadev</h3>
+              <span class="text-xs font-bold text-gta-neonMint">Lv. <span id="statsPlayerLevel">12</span></span>
+            </div>
+            <!-- XP Progress -->
+            <div class="w-full bg-slate-800 rounded-full h-2 mt-2 border border-white/10 overflow-hidden">
+              <div id="statsXpBar" class="bg-gradient-to-r from-teal-400 to-gta-neonMint h-full rounded-full" style="width: 64%;"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-medium">
+              <span id="statsNextLevel">Next Level: Lv. 13</span>
+              <span id="statsXpText">320 / 500 XP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Streak Stats Grid -->
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Current Streak -->
+          <div class="bg-gta-card/90 rounded-2xl p-3.5 border border-gta-border flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400 text-lg">
+              <i class="fa-solid fa-fire animate-bounce"></i>
+            </div>
+            <div>
+              <div class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Current Streak</div>
+              <div class="text-lg font-black text-white"><span id="statCurrentStreak">5</span> Days</div>
+            </div>
+          </div>
+
+          <!-- Longest Streak -->
+          <div class="bg-gta-card/90 rounded-2xl p-3.5 border border-gta-border flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-lg">
+              <i class="fa-solid fa-crown"></i>
+            </div>
+            <div>
+              <div class="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Longest Streak</div>
+              <div class="text-lg font-black text-white"><span id="statLongestStreak">12</span> Days</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weekly Progress Bar Chart -->
+        <div class="bg-gta-card/90 rounded-2xl p-4 border border-gta-border space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-slate-200">Weekly Progress</h3>
+            <div class="text-right">
+              <span id="weeklyAvgPct" class="text-base font-black text-white">57%</span>
+              <span class="text-[9px] block text-slate-400 font-medium">Avg. Completion</span>
+            </div>
+          </div>
+
+          <!-- Interactive Bars: Mon - Sun -->
+          <div class="h-32 pt-4 flex items-end justify-between gap-2 px-1">
+            <!-- Mon -->
+            <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group cursor-pointer">
+              <span id="weekMonLabel" class="text-[9px] text-slate-400 opacity-0 group-hover:opacity-100 transition">75%</span>
+              <div id="weekMonBar" class="w-full bg-gta-neonMint rounded-t-md transition-all duration-500 group-hover:brightness-120" style="height: 75%;"></div>
+              <span id="weekMonDay" class="text-[10px] text-slate-400 font-medium">Mon</span>
+            </div>
+            <!-- Tue -->
+            <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group cursor-pointer">
+              <span id="weekTueLabel" class="text-[9px] text-slate-400 opacity-0 group-hover:opacity-100 transition">50%</span>
+              <div id="weekTueBar" class="w-full bg-gta-neonMint rounded-t-md transition-all duration-500 group-hover:brightness-120" style="height: 50%;"></div>
+              <span id="weekTueDay" class="text-[10px] text-slate-400 font-medium">Tue</span>
+            </div>
+            <!-- Wed -->
+            <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group cursor-pointer">
+              <span id="weekWedLabel" class="text-[9px] text-slate-400 opacity-0 group-hover:opacity-100 transition">35%</span>
+              <div id="weekWedBar" class="w-full bg-gta-neonMint rounded-t-md transition-all duration-500 group-hover:brightness-120" style="height: 35%;"></div>
+              <span id="weekWedDay" class="text-[10px] text-slate-400 font-medium">Wed</span>
+            </div>
+            <!-- Thu -->
+            <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group cursor-pointer">
+              <span id="weekThuLabel" class="text-[9px] text-slate-400 opacity-0 group-hover:opacity-100 transition">60%</span>
+              <div id="weekThuBar" class="w-full bg-gta-neonMint rounded-t-md transition-all duration-500 group-hover:brightness-120" style="height: 60%;"></div>
+              <span id="weekThuDay" class="text-[10px] text-slate-400 font-medium">Thu</span>
+            </div>
+            <!-- Fri -->
+            <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group cursor-pointer">
+              <span id="weekFriLabel" class="text-[9px] text-slate-400 opacity-0 group-hover:opacity-100 transition">90%</span>
+              <div id="weekFriBar" class="w-full bg-gta-neonMint rounded-t-md transition-all duration-500 group-hover:brightness-120" style="height: 90%;"></div>
+              <span id="weekFriDay" class="text-[10px] text-slate-400 font-medium">Fri</span>
+            </div>
+            <!-- Sat -->
+            <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group cursor-pointer">
+              <span id="weekSatLabel" class="text-[9px] text-slate-400 opacity-0 group-hover:opacity-100 transition">40%</span>
+              <div id="weekSatBar" class="w-full bg-slate-700 rounded-t-md transition-all duration-500 group-hover:brightness-120" style="height: 40%;"></div>
+              <span id="weekSatDay" class="text-[10px] text-slate-400 font-medium">Sat</span>
+            </div>
+            <!-- Sun -->
+            <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end group cursor-pointer">
+              <span id="weekSunLabel" class="text-[9px] text-slate-400 opacity-0 group-hover:opacity-100 transition">48%</span>
+              <div id="weekSunBar" class="w-full bg-slate-700 rounded-t-md transition-all duration-500 group-hover:brightness-120" style="height: 48%;"></div>
+              <span id="weekSunDay" class="text-[10px] text-slate-400 font-medium">Sun</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Discipline Banner -->
+        <div class="bg-gradient-to-r from-slate-900 to-slate-800/80 rounded-2xl p-4 border border-white/5 flex items-center justify-between">
+          <div>
+            <div class="text-sm font-bold text-white">Discipline today,</div>
+            <div class="text-xs text-slate-400">Freedom tomorrow.</div>
+          </div>
+          <span class="text-amber-400 text-lg">
+            <i class="fa-solid fa-crown"></i>
+          </span>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 4: SHOP ================= -->
+      <section id="view-shop" class="space-y-4 hidden">
+        <!-- Top bar with currency readout -->
+        <div class="flex items-center justify-between pt-1">
+          <h1 class="text-2xl font-black font-gta-title tracking-wide text-white">Shop</h1>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-extrabold text-gta-neonMint bg-slate-900 border border-emerald-500/30 px-2 py-1 rounded-lg">
+              $ <span id="shopCashDisplay">2,450</span>
+            </span>
+            <span class="text-xs font-extrabold text-amber-300 bg-slate-900 border border-amber-500/30 px-2 py-1 rounded-lg flex items-center gap-1">
+              <i class="fa-solid fa-star text-[10px]"></i> <span id="shopStarDisplay">2</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Shop Tab Selector: Items vs Backgrounds -->
+        <div class="grid grid-cols-2 bg-slate-900/90 p-1 rounded-xl border border-white/10 text-xs font-bold">
+          <button id="shopTabItems" onclick="switchShopTab('items')" class="py-2 rounded-lg bg-gta-neonMint text-slate-950 shadow transition">
+            Items
+          </button>
+          <button id="shopTabBg" onclick="switchShopTab('backgrounds')" class="py-2 rounded-lg text-slate-400 hover:text-white transition flex items-center justify-center gap-1">
+            Backgrounds <span class="text-[10px] text-amber-400 font-mono">$ 300</span>
+          </button>
+        </div>
+
+        <!-- Persistent inventory status -->
+        <div id="shopInventoryPanel" class="bg-slate-950/60 rounded-2xl p-3 border border-white/5 grid grid-cols-2 gap-2 text-[10px]">
+          <div class="rounded-xl bg-slate-900/70 border border-white/5 p-2">
+            <div class="text-slate-500 uppercase tracking-wider font-bold">Skip Tokens</div>
+            <div id="skipTokenCount" class="text-white font-black text-sm mt-0.5">0</div>
+          </div>
+          <div class="rounded-xl bg-slate-900/70 border border-white/5 p-2">
+            <div class="text-slate-500 uppercase tracking-wider font-bold">XP Boost</div>
+            <div id="xpBoostStatus" class="text-white font-black mt-0.5">Inactive</div>
+          </div>
+          <div class="rounded-xl bg-slate-900/70 border border-white/5 p-2">
+            <div class="text-slate-500 uppercase tracking-wider font-bold">Skins Owned</div>
+            <div id="skinStatus" class="text-white font-black mt-0.5">1</div>
+          </div>
+          <div class="rounded-xl bg-slate-900/70 border border-white/5 p-2">
+            <div class="text-slate-500 uppercase tracking-wider font-bold">Theme Pack</div>
+            <div id="themePackStatus" class="text-white font-black mt-0.5">Locked</div>
+          </div>
+        </div>
+
+        <!-- Items Tab Content -->
+        <div id="shopItemsContainer" class="space-y-2.5">
+          <!-- Item 1: Extra XP -->
+          <div class="bg-gta-card/90 rounded-2xl p-3.5 border border-gta-border flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-gta-neonMint text-xl">
+                <i class="fa-solid fa-bolt"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-white">Extra XP (1 hour)</h4>
+                <p class="text-[10px] text-slate-400">Gain 2x XP for 1 hour</p>
+                <span class="text-[10px] font-bold text-emerald-400 mt-0.5 inline-block">$ 150</span>
+              </div>
+            </div>
+            <button id="buyXpButton" onclick="purchaseItem('Extra XP Boost', 150, 'xp')" class="bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-slate-950 border border-emerald-500/40 text-xs font-bold px-4 py-1.5 rounded-xl transition active:scale-95">
+              Buy
+            </button>
+          </div>
+
+          <!-- Item 2: Skip Task -->
+          <div class="bg-gta-card/90 rounded-2xl p-3.5 border border-gta-border flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xl">
+                <i class="fa-solid fa-forward-step"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-white">Skip Task</h4>
+                <p class="text-[10px] text-slate-400">Skip one task (one use per day)</p>
+                <span class="text-[10px] font-bold text-emerald-400 mt-0.5 inline-block">$ 200</span>
+              </div>
+            </div>
+            <button id="buySkipButton" onclick="purchaseItem('Task Skip Pass', 200, 'skip')" class="bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-slate-950 border border-emerald-500/40 text-xs font-bold px-4 py-1.5 rounded-xl transition active:scale-95">
+              Buy
+            </button>
+          </div>
+
+          <!-- Item 3: Theme Pack -->
+          <div class="bg-gta-card/90 rounded-2xl p-3.5 border border-gta-border flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 text-xl">
+                <i class="fa-solid fa-palette"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-white">Theme Pack</h4>
+                <p class="text-[10px] text-slate-400">Unlock 6 GTA UI themes</p>
+                <span class="text-[10px] font-bold text-emerald-400 mt-0.5 inline-block">$ 500</span>
+              </div>
+            </div>
+            <button id="buyThemeButton" onclick="purchaseItem('Theme Pack', 500, 'theme')" class="bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-slate-950 border border-emerald-500/40 text-xs font-bold px-4 py-1.5 rounded-xl transition active:scale-95">
+              Buy
+            </button>
+          </div>
+
+          <!-- Item 4: Character Skin -->
+          <div class="bg-gta-card/90 rounded-2xl p-3.5 border border-gta-border flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl">
+                <i class="fa-solid fa-mask"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-white">Character Skin</h4>
+                <p class="text-[10px] text-slate-400">Change your avatar skin</p>
+                <span class="text-[10px] font-bold text-emerald-400 mt-0.5 inline-block">$ 350</span>
+              </div>
+            </div>
+            <button id="buySkinButton" onclick="purchaseItem('Character Skin', 350, 'skin')" class="bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-slate-950 border border-emerald-500/40 text-xs font-bold px-4 py-1.5 rounded-xl transition active:scale-95">
+              Buy
+            </button>
+          </div>
+        </div>
+
+        <!-- Backgrounds Tab Content (Quick jump to Themes) -->
+        <div id="shopBgContainer" class="space-y-3 hidden">
+          <p class="text-xs text-slate-300">Custom city panoramas inspired by Los Santos, Vice City and San Fierro.</p>
+          <button onclick="switchView('view-theme')" class="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paintbrush"></i> Browse Background Themes
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 5: SETTINGS ================= -->
+      <section id="view-settings" class="space-y-4 hidden">
+        <div class="flex items-center justify-between pt-1">
+          <h1 class="text-2xl font-black font-gta-title tracking-wide text-white">Settings</h1>
+        </div>
+
+        <!-- Profile Bar -->
+        <div class="bg-gta-card/90 rounded-2xl p-4 border border-gta-border flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-gta-neonMint bg-slate-800">
+            <img src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=120&auto=format&fit=crop&q=80" alt="Jayadev" data-avatar="true" class="w-full h-full object-cover">
+          </div>
+          <div class="flex-1">
+            <div id="settingsPlayerName" class="text-sm font-bold text-white">Jayadev</div>
+            <div class="text-[10px] text-gta-neonMint font-semibold">Lv. <span id="settingsPlayerLevel">12</span> • <span id="settingsRankTitle">Street Veteran</span></div>
+            <div class="w-full bg-slate-800 rounded-full h-1.5 mt-1.5">
+              <div id="settingsXpBar" class="bg-gta-neonMint h-full rounded-full" style="width: 64%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Options List -->
+        <div class="bg-gta-card/90 rounded-2xl border border-gta-border divide-y divide-white/5 overflow-hidden">
+          <!-- Profile Edit -->
+          <div onclick="promptChangeName()" class="p-3.5 flex items-center justify-between hover:bg-white/5 cursor-pointer transition">
+            <div class="flex items-center gap-3 text-xs font-semibold text-slate-200">
+              <i class="fa-regular fa-user text-slate-400 w-5"></i>
+              <span>Profile Name</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+          </div>
+
+          <!-- Theme -->
+          <div onclick="switchView('view-theme')" class="p-3.5 flex items-center justify-between hover:bg-white/5 cursor-pointer transition">
+            <div class="flex items-center gap-3 text-xs font-semibold text-slate-200">
+              <i class="fa-solid fa-palette text-slate-400 w-5"></i>
+              <span>Theme</span>
+            </div>
+            <div class="flex items-center gap-1.5 text-xs text-slate-400">
+              <span id="currentThemeNameLabel">Sunset City</span>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+            </div>
+          </div>
+
+          <!-- Sound FX Toggle -->
+          <div class="p-3.5 flex items-center justify-between">
+            <div class="flex items-center gap-3 text-xs font-semibold text-slate-200">
+              <i class="fa-solid fa-volume-high text-slate-400 w-5"></i>
+              <span>GTA Sound FX</span>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="soundToggle" checked onchange="toggleSound(this.checked)" class="sr-only peer">
+              <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gta-neonMint"></div>
+            </label>
+          </div>
+
+          <!-- Notifications Toggle -->
+          <div class="p-3.5 flex items-center justify-between">
+            <div class="flex items-center gap-3 text-xs font-semibold text-slate-200">
+              <i class="fa-regular fa-bell text-slate-400 w-5"></i>
+              <span>Notifications</span>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="notifyToggle" checked onchange="toggleNotifications(this.checked)" class="sr-only peer">
+              <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gta-neonMint"></div>
+            </label>
+          </div>
+
+          <!-- Data & Backup -->
+          <div onclick="resetDailyTasks()" class="p-3.5 flex items-center justify-between hover:bg-white/5 cursor-pointer transition">
+            <div class="flex items-center gap-3 text-xs font-semibold text-slate-200">
+              <i class="fa-solid fa-arrows-rotate text-slate-400 w-5"></i>
+              <span>Reset Daily Progress</span>
+            </div>
+            <span class="text-[10px] text-amber-400 font-bold">Reset</span>
+          </div>
+
+          <!-- About -->
+          <div onclick="showToast('Daily Task v2.6 • GTA Edition')" class="p-3.5 flex items-center justify-between hover:bg-white/5 cursor-pointer transition">
+            <div class="flex items-center gap-3 text-xs font-semibold text-slate-200">
+              <i class="fa-solid fa-circle-info text-slate-400 w-5"></i>
+              <span>About</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 6: THEME SELECTION ================= -->
+      <section id="view-theme" class="space-y-4 hidden">
+        <div class="flex items-center gap-2 pt-1">
+          <button onclick="switchView('view-settings')" class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition">
+            <i class="fa-solid fa-chevron-left text-xs"></i>
+          </button>
+          <h1 class="text-2xl font-black font-gta-title tracking-wide text-white">Theme</h1>
+        </div>
+
+        <p class="text-xs text-slate-300">Choose your city aesthetic:</p>
+        <div id="themeAccessStatus" class="text-[10px] text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-xl px-3 py-2">Sunset City is available. Buy the Theme Pack in Shop to unlock the other cities.</div>
+
+        <!-- Theme Grid Cards (6 City Themes) -->
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Sunset City -->
+          <div onclick="applyTheme('sunset', 'Sunset City')" class="theme-card relative rounded-xl overflow-hidden border-2 border-gta-neonMint cursor-pointer shadow-lg group">
+            <div class="h-20 bg-gradient-to-tr from-amber-600 via-rose-600 to-indigo-950 flex items-center justify-center">
+              <i class="fa-solid fa-city text-2xl text-white/70 group-hover:scale-110 transition"></i>
+            </div>
+            <div class="p-2 bg-slate-900 flex items-center justify-between">
+              <span class="text-xs font-bold text-white">Sunset City</span>
+              <i class="fa-solid fa-circle-check text-gta-neonMint text-xs"></i>
+            </div>
+          </div>
+
+          <!-- Night City -->
+          <div onclick="applyTheme('night', 'Night City')" class="theme-card relative rounded-xl overflow-hidden border border-white/10 cursor-pointer shadow-lg hover:border-gta-neonBlue transition group">
+            <div class="h-20 bg-gradient-to-tr from-purple-950 via-slate-900 to-cyan-900 flex items-center justify-center">
+              <i class="fa-solid fa-moon text-2xl text-cyan-400/70 group-hover:scale-110 transition"></i>
+            </div>
+            <div class="p-2 bg-slate-900 flex items-center justify-between">
+              <span class="text-xs font-bold text-white">Night City</span>
+              <span class="text-[10px] text-slate-400">Free</span>
+            </div>
+          </div>
+
+          <!-- Vice City -->
+          <div onclick="applyTheme('vice', 'Vice City')" class="theme-card relative rounded-xl overflow-hidden border border-white/10 cursor-pointer shadow-lg hover:border-pink-500 transition group">
+            <div class="h-20 bg-gradient-to-tr from-pink-600 via-purple-700 to-cyan-600 flex items-center justify-center">
+              <i class="fa-solid fa-umbrella-beach text-2xl text-pink-200/80 group-hover:scale-110 transition"></i>
+            </div>
+            <div class="p-2 bg-slate-900 flex items-center justify-between">
+              <span class="text-xs font-bold text-white">Vice City</span>
+              <span class="text-[10px] text-pink-400 font-bold">Neon</span>
+            </div>
+          </div>
+
+          <!-- Snow City -->
+          <div onclick="applyTheme('snow', 'Snow City')" class="theme-card relative rounded-xl overflow-hidden border border-white/10 cursor-pointer shadow-lg hover:border-sky-400 transition group">
+            <div class="h-20 bg-gradient-to-tr from-slate-800 via-sky-900 to-slate-900 flex items-center justify-center">
+              <i class="fa-regular fa-snowflake text-2xl text-sky-200/80 group-hover:scale-110 transition"></i>
+            </div>
+            <div class="p-2 bg-slate-900 flex items-center justify-between">
+              <span class="text-xs font-bold text-white">Snow City</span>
+              <span class="text-[10px] text-sky-400">Frost</span>
+            </div>
+          </div>
+
+          <!-- Desert -->
+          <div onclick="applyTheme('desert', 'Desert')" class="theme-card relative rounded-xl overflow-hidden border border-white/10 cursor-pointer shadow-lg hover:border-amber-500 transition group">
+            <div class="h-20 bg-gradient-to-tr from-amber-800 via-yellow-900 to-stone-900 flex items-center justify-center">
+              <i class="fa-solid fa-mountain-sun text-2xl text-amber-200/70 group-hover:scale-110 transition"></i>
+            </div>
+            <div class="p-2 bg-slate-900 flex items-center justify-between">
+              <span class="text-xs font-bold text-white">Desert</span>
+              <span class="text-[10px] text-amber-400">Dune</span>
+            </div>
+          </div>
+
+          <!-- Forest -->
+          <div onclick="applyTheme('forest', 'Forest')" class="theme-card relative rounded-xl overflow-hidden border border-white/10 cursor-pointer shadow-lg hover:border-emerald-500 transition group">
+            <div class="h-20 bg-gradient-to-tr from-emerald-950 via-teal-900 to-green-950 flex items-center justify-center">
+              <i class="fa-solid fa-tree text-2xl text-emerald-300/70 group-hover:scale-110 transition"></i>
+            </div>
+            <div class="p-2 bg-slate-900 flex items-center justify-between">
+              <span class="text-xs font-bold text-white">Forest</span>
+              <span class="text-[10px] text-emerald-400">Nature</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="absolute bottom-0 inset-x-0 bg-slate-950/95 backdrop-blur-md border-t border-white/5 py-2.5 px-4 flex justify-around items-center z-30">
+      <!-- Nav Item: Home -->
+      <button onclick="switchView('view-home')" class="nav-btn flex flex-col items-center gap-1 text-gta-neonMint transition" data-target="view-home">
+        <i class="fa-solid fa-house text-base"></i>
+        <span class="text-[10px] font-bold tracking-tight">Home</span>
+      </button>
+
+      <!-- Nav Item: Tasks -->
+      <button onclick="switchView('view-tasks')" class="nav-btn flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition" data-target="view-tasks">
+        <i class="fa-solid fa-clipboard-check text-base"></i>
+        <span class="text-[10px] font-bold tracking-tight">Tasks</span>
+      </button>
+
+      <!-- Nav Item: Stats -->
+      <button onclick="switchView('view-stats')" class="nav-btn flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition" data-target="view-stats">
+        <i class="fa-solid fa-chart-simple text-base"></i>
+        <span class="text-[10px] font-bold tracking-tight">Stats</span>
+      </button>
+
+      <!-- Nav Item: Shop -->
+      <button onclick="switchView('view-shop')" class="nav-btn flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition" data-target="view-shop">
+        <i class="fa-solid fa-cart-shopping text-base"></i>
+        <span class="text-[10px] font-bold tracking-tight">Shop</span>
+      </button>
+
+      <!-- Nav Item: Settings -->
+      <button onclick="switchView('view-settings')" class="nav-btn flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition" data-target="view-settings">
+        <i class="fa-solid fa-gear text-base"></i>
+        <span class="text-[10px] font-bold tracking-tight">Settings</span>
+      </button>
+    </nav>
+
+    <div id="missionCompleteModal" class="fixed inset-0 z-50 modal-backdrop bg-slate-950/85 hidden flex-col items-center justify-center p-4">
+      <!-- Outer GTA Stamp Container -->
+      <div class="relative w-full max-w-sm bg-gradient-to-b from-slate-900/95 to-slate-950/95 border-2 border-emerald-500/40 rounded-3xl p-6 shadow-2xl shadow-emerald-500/20 text-center overflow-hidden">
+
+        <!-- Background Palm Silhouette inside Modal -->
+        <div class="absolute inset-0 pointer-events-none opacity-20">
+          <svg class="w-full h-full object-cover" viewBox="0 0 300 300">
+            <path d="M150,300 Q155,200 130,120 M130,120 Q90,110 70,140 M130,120 Q120,70 90,85 M130,120 Q160,70 180,95 M130,120 Q180,115 170,145" stroke="#10b981" stroke-width="4" fill="none" />
+          </svg>
+        </div>
+
+        <!-- Header: MISSION COMPLETE in GTA Typography -->
+        <div class="relative z-10 space-y-1 my-2">
+          <h2 class="text-4xl font-black font-mission text-white tracking-widest uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.9)]">
+            MISSION<br/><span class="text-white">COMPLETE</span>
+          </h2>
+          <p class="text-xs font-bold text-slate-300 uppercase tracking-widest">
+            Daily Task
+          </p>
+        </div>
+
+        <!-- Reward Badges -->
+        <div class="relative z-10 bg-slate-900/80 border border-white/10 rounded-2xl p-4 my-5 space-y-3">
+          <!-- XP Reward -->
+          <div class="flex items-center justify-center gap-2 text-sm font-black text-gta-neonMint">
+            <span class="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500 flex items-center justify-center text-[10px]">XP</span>
+            <span>+ 50 XP</span>
+          </div>
+
+          <!-- Cash Reward -->
+          <div class="flex items-center justify-center gap-2 text-sm font-black text-emerald-300">
+            <span class="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500 flex items-center justify-center text-xs">$</span>
+            <span>+ $ 200</span>
+          </div>
+
+          <!-- Star Reward -->
+          <div class="flex items-center justify-center gap-2 text-sm font-black text-amber-400">
+            <i class="fa-solid fa-star text-base animate-pulse"></i>
+            <span>+ 1 Star</span>
+          </div>
+        </div>
+
+        <!-- Continue Button -->
+        <div class="relative z-10 space-y-3">
+          <button onclick="closeMissionComplete()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm uppercase tracking-wider rounded-xl shadow-lg shadow-emerald-500/30 active:scale-95 transition">
+            Continue
+          </button>
+          <div class="text-[11px] font-bold text-slate-400 italic">
+            “Good Job, Legend!”
+          </div>
+        </div>
+
+        <!-- GTA Minimap / Radar HUD (Bottom-Left Corner) -->
+        <div class="absolute bottom-3 left-3 w-16 h-16 rounded-full border-2 border-slate-700/80 bg-slate-950/90 shadow-lg overflow-hidden flex items-center justify-center">
+          <!-- Roads Vector -->
+          <svg class="w-full h-full opacity-60" viewBox="0 0 100 100">
+            <path d="M0,50 L100,50 M50,0 L50,100 M20,10 L80,90 M80,20 L10,80" stroke="#64748b" stroke-width="6" fill="none" />
+            <circle cx="50" cy="50" r="35" stroke="#38bdf8" stroke-width="2" fill="none" stroke-dasharray="4 4" />
+          </svg>
+          <!-- Radar sweep line -->
+          <div class="absolute inset-0 radar-sweep-anim pointer-events-none">
+            <div class="w-1/2 h-0.5 bg-gradient-to-r from-transparent to-gta-neonMint"></div>
+          </div>
+          <!-- Player Blip icon -->
+          <div class="absolute w-2.5 h-2.5 bg-gta-neonMint rounded-full border border-white shadow-sm shadow-gta-neonMint"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="addTaskModal" class="fixed inset-0 z-50 modal-backdrop bg-slate-950/80 hidden flex-col items-center justify-center p-4">
+      <div class="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl relative space-y-4">
+        <!-- Close Button -->
+        <button onclick="closeAddTaskModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-plus-circle text-gta-neonMint"></i> Add New Task
+        </h3>
+
+        <!-- Form fields -->
+        <div class="space-y-3 text-left">
+          <div>
+            <label class="text-[11px] font-bold text-slate-300 block mb-1">Task Title</label>
+            <input type="text" id="newTaskTitle" placeholder="e.g., Coding / Project Sprint" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-gta-neonMint">
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[11px] font-bold text-slate-300 block mb-1">Time / Schedule</label>
+              <input type="text" id="newTaskTime" placeholder="e.g., 08:00 PM - 09:00 PM" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-gta-neonMint">
+            </div>
+            <div>
+              <label class="text-[11px] font-bold text-slate-300 block mb-1">Category Icon</label>
+              <select id="newTaskCategory" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-gta-neonMint">
+                <option value="workout">Dumbbell (Workout)</option>
+                <option value="study">Book (Study/College)</option>
+                <option value="read">Open Book (Reading)</option>
+                <option value="water">Droplet (Hydration)</option>
+                <option value="food">Fork & Knife (Nutrition)</option>
+                <option value="night">Moon (Night Routine)</option>
+                <option value="code">Laptop (Coding)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 flex items-center gap-2">
+          <button onclick="closeAddTaskModal()" class="flex-1 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold hover:bg-slate-700 transition">
+            Cancel
+          </button>
+          <button onclick="saveNewTask()" class="flex-1 py-2 rounded-xl bg-gta-neonMint text-slate-950 text-xs font-bold hover:bg-emerald-400 transition">
+            Add Task
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="nameModal" class="fixed inset-0 z-50 modal-backdrop bg-slate-950/80 hidden flex-col items-center justify-center p-4">
+      <div class="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl relative space-y-4">
+        <button onclick="closeNameModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="fa-regular fa-user text-gta-neonMint"></i> Edit Profile Name
+        </h3>
+        <div>
+          <label class="text-[11px] font-bold text-slate-300 block mb-1">Player Name</label>
+          <input type="text" id="playerNameInput" maxlength="24" autocomplete="off" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-gta-neonMint">
+        </div>
+        <div class="flex gap-2">
+          <button onclick="closeNameModal()" class="flex-1 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold hover:bg-slate-700 transition">Cancel</button>
+          <button onclick="savePlayerName()" class="flex-1 py-2 rounded-xl bg-gta-neonMint text-slate-950 text-xs font-bold hover:bg-emerald-400 transition">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toastBox" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900 border border-gta-neonMint/40 px-4 py-2.5 rounded-xl shadow-2xl text-xs font-bold text-white flex items-center gap-2 pointer-events-none opacity-0 -translate-y-4 transition-all duration-300">
+      <i class="fa-solid fa-circle-check text-gta-neonMint"></i>
+      <span id="toastMsg">Action completed!</span>
+    </div>
+
+  </div> <!-- End App Container -->
+
+  <script>
+    /* Audio synthesizer for GTA retro arcade SFX without external file dependencies */
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    // Play click blip
+    function playSfxClick() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(850, ctx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.05);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.06);
+      } catch (e) {}
+    }
+
+    // Play Task Complete chime
+    function playSfxTaskDone() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C, E, G, High C
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+          gain.gain.setValueAtTime(0.18, now + idx * 0.07);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.07);
+          osc.stop(now + idx * 0.07 + 0.22);
+        });
+      } catch (e) {}
+    }
+
+    // Play Cash / Buy Register Cha-ching
+    function playSfxCash() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        [987.77, 1318.51].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+          gain.gain.setValueAtTime(0.15, now + idx * 0.08);
+          gain.gain.linearRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.28);
+        });
+      } catch (e) {}
+    }
+
+    // Play Iconic GTA Mission Passed Brass Trumpet Fanfare
+    function playSfxMissionPassed() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        // GTA brass-like sequence
+        const chords = [
+          { f: 440, t: 0.0, d: 0.18 }, // A4
+          { f: 554.37, t: 0.18, d: 0.18 }, // C#5
+          { f: 659.25, t: 0.36, d: 0.25 }, // E5
+          { f: 880, t: 0.60, d: 0.65 }     // High A5 triumphant sustain
+        ];
+
+        chords.forEach(c => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(c.f, now + c.t);
+          gain.gain.setValueAtTime(0.16, now + c.t);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + c.t + c.d);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + c.t);
+          osc.stop(now + c.t + c.d);
+        });
+      } catch (e) {}
+    }
+
+    function toggleSound(val) {
+      soundEnabled = val;
+      showToast(val ? 'Sound effects enabled' : 'Sound effects muted');
+    }
+  </script>
+
+  <script>
+    const STORAGE_KEY = 'daily-task-level-up-life-v3';
+    const TASK_XP = 25;
+    const TASK_CASH = 30;
+    const MISSION_XP = 50;
+    const MISSION_CASH = 200;
+    const THEME_LABELS = {
+      sunset: 'Sunset City',
+      night: 'Night City',
+      vice: 'Vice City',
+      snow: 'Snow City',
+      desert: 'Desert',
+      forest: 'Forest'
+    };
+    const AVAILABLE_SKINS = ['default', 'street', 'vice', 'night'];
+    const SKIN_LABELS = {
+      default: 'Default', street: 'Street', vice: 'Vice', night: 'Night'
+    };
+    const SKIN_PALETTES = {
+      default: { bg:'#0f172a', jacket:'#10b981', face:'#f2c7a5', hair:'#151515', accent:'#00e5a3' },
+      street:  { bg:'#111827', jacket:'#334155', face:'#c98d68', hair:'#090909', accent:'#f59e0b' },
+      vice:    { bg:'#1e1033', jacket:'#ec4899', face:'#f0b38d', hair:'#26113f', accent:'#67e8f9' },
+      night:   { bg:'#071827', jacket:'#00b4d8', face:'#a56d4c', hair:'#030712', accent:'#8b5cf6' }
+    };
+
+    const defaultTasks = [
+      { id:'task-1', title:'Gym / Workout', schedule:'05:00 AM - 06:00 AM', category:'workout', icon:'fa-dumbbell', color:'text-emerald-400 bg-emerald-500/10 border-emerald-500/30', completed:true, rewardClaimed:true },
+      { id:'task-2', title:'Study (College)', schedule:'09:00 AM - 05:00 PM', category:'study', icon:'fa-book-open', color:'text-emerald-400 bg-emerald-500/10 border-emerald-500/30', completed:true, rewardClaimed:true },
+      { id:'task-3', title:'Read a Book', schedule:'07:00 PM - 08:00 PM', category:'read', icon:'fa-book-bookmark', color:'text-cyan-400 bg-cyan-500/10 border-cyan-500/30', completed:false, rewardClaimed:false },
+      { id:'task-4', title:'Drink 3L Water', schedule:'All Day', category:'water', icon:'fa-droplet', color:'text-blue-400 bg-blue-500/10 border-blue-500/30', completed:false, rewardClaimed:false },
+      { id:'task-5', title:'Healthy Food', schedule:'All Day', category:'food', icon:'fa-utensils', color:'text-amber-400 bg-amber-500/10 border-amber-500/30', completed:false, rewardClaimed:false },
+      { id:'task-6', title:'Night Routine', schedule:'10:30 PM - 11:00 PM', category:'night', icon:'fa-moon', color:'text-cyan-400 bg-cyan-500/10 border-cyan-500/30', completed:false, rewardClaimed:false },
+      { id:'task-7', title:'Morning Meditation', schedule:'06:00 AM - 06:30 AM', category:'workout', icon:'fa-heart-pulse', color:'text-emerald-400 bg-emerald-500/10 border-emerald-500/30', completed:true, rewardClaimed:true },
+      { id:'task-8', title:'Coding Project', schedule:'08:00 PM - 09:30 PM', category:'code', icon:'fa-laptop-code', color:'text-indigo-400 bg-indigo-500/10 border-indigo-500/30', completed:true, rewardClaimed:true }
+    ];
+
+    function getTodayKey(date = new Date()) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function getDayDiff(fromKey, toKey) {
+      const a = new Date(`${fromKey}T00:00:00`);
+      const b = new Date(`${toKey}T00:00:00`);
+      return Math.round((b - a) / 86400000);
+    }
+
+    const state = {
+      version: 3,
+      player: {
+        name:'Jayadev', level:12, currentXp:320, targetXp:500, cash:2450, stars:2,
+        currentStreak:5, longestStreak:12, theme:'sunset',
+        notifications:true, soundEnabled:true, xpMultiplierUntil:0, activeSkin:'default',
+        inventory:{ skipTokens:0, skins:['default'], themePackUnlocked:false }
+      },
+      activeDate: getTodayKey(),
+      currentFilter:'all',
+      skipUsedToday:false,
+      dailyMissionClaimed:false,
+      notificationSent:{},
+      history:{},
+      tasks: defaultTasks.map(t => ({...t, date:getTodayKey(), skipped:false}))
+    };
+
+    function normalizeTask(raw) {
+      return {
+        id: String(raw.id || `task-${Date.now()}-${Math.random().toString(36).slice(2,7)}`),
+        title: String(raw.title || 'Untitled Mission'),
+        schedule: String(raw.schedule || 'All Day'),
+        category: String(raw.category || 'workout'),
+        icon: String(raw.icon || 'fa-dumbbell'),
+        color: String(raw.color || 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'),
+        completed: raw.completed === true,
+        skipped: raw.skipped === true,
+        rewardClaimed: raw.rewardClaimed === true || raw.completed === true,
+        date: String(raw.date || getTodayKey()),
+        custom: raw.custom === true
+      };
+    }
+
+    function mergeLoadedState(saved) {
+      if (!saved || typeof saved !== 'object') return;
+      if (saved.player && typeof saved.player === 'object') Object.assign(state.player, saved.player);
+      state.player.inventory = {
+        skipTokens: Number(state.player.inventory?.skipTokens) || 0,
+        skins: Array.isArray(state.player.inventory?.skins) ? state.player.inventory.skins.filter(s => AVAILABLE_SKINS.includes(s)) : ['default'],
+        themePackUnlocked: state.player.inventory?.themePackUnlocked === true
+      };
+      if (!state.player.inventory.skins.includes('default')) state.player.inventory.skins.unshift('default');
+      if (!AVAILABLE_SKINS.includes(state.player.activeSkin) || !state.player.inventory.skins.includes(state.player.activeSkin)) state.player.activeSkin = 'default';
+      state.player.level = Math.max(1, Number(state.player.level) || 1);
+      state.player.currentXp = Math.max(0, Number(state.player.currentXp) || 0);
+      state.player.targetXp = Math.max(100, Number(state.player.targetXp) || 500);
+      state.player.cash = Math.max(0, Number(state.player.cash) || 0);
+      state.player.stars = Math.max(0, Number(state.player.stars) || 0);
+      state.player.currentStreak = Math.max(0, Number(state.player.currentStreak) || 0);
+      state.player.longestStreak = Math.max(state.player.currentStreak, Number(state.player.longestStreak) || 0);
+      state.player.notifications = saved.player.notifications !== false;
+      state.player.soundEnabled = saved.player.soundEnabled !== false;
+      soundEnabled = state.player.soundEnabled;
+      state.player.xpMultiplierUntil = Number(saved.player.xpMultiplierUntil) || 0;
+      state.activeDate = String(saved.activeDate || getTodayKey());
+      state.currentFilter = ['all','today','upcoming','completed'].includes(saved.currentFilter) ? saved.currentFilter : 'all';
+      state.skipUsedToday = saved.skipUsedToday === true;
+      state.dailyMissionClaimed = saved.dailyMissionClaimed === true;
+      state.notificationSent = (saved.notificationSent && typeof saved.notificationSent === 'object') ? saved.notificationSent : {};
+      state.history = (saved.history && typeof saved.history === 'object') ? saved.history : {};
+      state.tasks = Array.isArray(saved.tasks) && saved.tasks.length ? saved.tasks.map(normalizeTask) : defaultTasks.map(normalizeTask);
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) mergeLoadedState(JSON.parse(raw));
+      } catch (e) {
+        showToast('Saved data could not be loaded. Starting safely with local defaults.');
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          version: state.version,
+          player: state.player,
+          activeDate: state.activeDate,
+          currentFilter: state.currentFilter,
+          skipUsedToday: state.skipUsedToday,
+          dailyMissionClaimed: state.dailyMissionClaimed,
+          notificationSent: state.notificationSent,
+          history: state.history,
+          tasks: state.tasks
+        }));
+      } catch (e) {
+        showToast('Storage is unavailable in this browser mode.');
+      }
+    }
+
+    function recordDay(dateKey) {
+      if (!dateKey || !/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) return;
+      const relevant = state.tasks.filter(t => t.date === dateKey || t.date === 'today');
+      const total = relevant.length;
+      const completed = relevant.filter(t => t.completed || t.skipped).length;
+      state.history[dateKey] = {
+        total,
+        completed,
+        percentage: total ? Math.round((completed / total) * 100) : 0,
+        allCompleted: total > 0 && completed === total
+      };
+      const keys = Object.keys(state.history).sort();
+      if (keys.length > 90) keys.slice(0, keys.length - 90).forEach(k => delete state.history[k]);
+    }
+
+    function prepareForToday() {
+      const today = getTodayKey();
+      if (state.activeDate === today) {
+        state.tasks.forEach(t => { if (t.date === 'today' || !/^\d{4}-\d{2}-\d{2}$/.test(t.date)) t.date = today; });
+        return;
+      }
+      const oldDate = state.activeDate;
+      recordDay(oldDate);
+      const gap = getDayDiff(oldDate, today);
+      if (gap === 1 && state.history[oldDate]?.allCompleted) {
+        state.player.currentStreak = Math.max(1, state.player.currentStreak);
+      } else {
+        state.player.currentStreak = 0;
+      }
+      state.player.longestStreak = Math.max(state.player.longestStreak, state.player.currentStreak);
+      state.activeDate = today;
+      state.skipUsedToday = false;
+      state.dailyMissionClaimed = false;
+      state.notificationSent = {};
+      state.tasks.forEach(t => {
+        t.date = today;
+        t.completed = false;
+        t.skipped = false;
+        t.rewardClaimed = false;
+      });
+      state.currentFilter = 'all';
+      saveState();
+      showToast('New day detected — daily missions reset.');
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+    }
+
+    function parseStartMinutes(schedule) {
+      if (!schedule || /^all day$/i.test(schedule.trim())) return null;
+      const first = schedule.split('-')[0].trim();
+      const m = first.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+      if (!m) return null;
+      let h = Number(m[1]);
+      const min = Number(m[2]);
+      const ap = m[3].toUpperCase();
+      if (ap === 'PM' && h !== 12) h += 12;
+      if (ap === 'AM' && h === 12) h = 0;
+      return h * 60 + min;
+    }
+
+    function isTaskUpcoming(task, now = new Date()) {
+      if (task.completed || task.skipped) return false;
+      if (task.date !== getTodayKey(now)) return false;
+      const start = parseStartMinutes(task.schedule);
+      if (start === null) return true;
+      return start >= (now.getHours() * 60 + now.getMinutes());
+    }
+
+    function renderHomeTasks() {
+      const container = document.getElementById('homeTaskList');
+      if (!container) return;
+      const today = getTodayKey();
+      const tasks = state.tasks.filter(t => t.date === today || t.date === 'today');
+      container.innerHTML = '';
+      tasks.forEach(task => {
+        const item = document.createElement('div');
+        item.className = `flex items-center justify-between p-3 rounded-xl border transition-all duration-200 ${task.completed || task.skipped ? 'bg-slate-900/60 border-white/5 opacity-90' : 'bg-gta-card border-gta-border hover:border-slate-600'}`;
+        const statusText = task.skipped ? 'SKIPPED' : (task.completed ? 'DONE' : 'PENDING');
+        item.innerHTML = `
+          <div class="flex items-center gap-3 cursor-pointer min-w-0" onclick="toggleTask('${escapeHtml(task.id)}')">
+            <div class="w-8 h-8 rounded-lg ${task.color} border flex items-center justify-center text-xs flex-shrink-0"><i class="fa-solid ${task.icon}"></i></div>
+            <div class="min-w-0">
+              <span class="block text-xs font-bold truncate ${(task.completed || task.skipped) ? 'line-through text-slate-400' : 'text-slate-100'}">${escapeHtml(task.title)}</span>
+              <span class="block text-[9px] text-slate-500 mt-0.5">${escapeHtml(task.schedule)}${task.skipped ? ' • SKIPPED' : ''}</span>
+            </div>
+          </div>
+          <button aria-label="${statusText} ${escapeHtml(task.title)}" onclick="toggleTask('${escapeHtml(task.id)}')" class="w-6 h-6 rounded-md flex items-center justify-center transition ${task.skipped ? 'bg-slate-600 text-slate-300' : task.completed ? 'bg-gta-neonMint text-slate-950 shadow-md shadow-gta-neonMint/30' : 'border border-slate-600 bg-slate-800/80 text-transparent hover:border-gta-neonMint'}">
+            <i class="fa-solid ${task.skipped ? 'fa-forward-step text-[10px]' : 'fa-check text-xs'}"></i>
+          </button>`;
+        container.appendChild(item);
+      });
+      updateProgressHeader();
+    }
+
+    function renderFullTasks() {
+      const container = document.getElementById('fullTaskList');
+      if (!container) return;
+      const now = new Date();
+      const filtered = state.tasks.filter(t => {
+        if (state.currentFilter === 'today') return t.date === getTodayKey(now);
+        if (state.currentFilter === 'upcoming') return isTaskUpcoming(t, now);
+        if (state.currentFilter === 'completed') return t.completed || t.skipped;
+        return true;
+      });
+      container.innerHTML = '';
+      if (!filtered.length) {
+        container.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs"><i class="fa-solid fa-box-open text-2xl mb-2 block"></i>No tasks found in this view.</div>';
+        return;
+      }
+      filtered.forEach(task => {
+        const card = document.createElement('div');
+        card.className = 'bg-gta-card/90 rounded-2xl p-3 border border-gta-border flex items-center justify-between gap-2 hover:border-slate-600 transition';
+        const status = task.skipped ? 'Skipped' : task.completed ? 'Done ✓' : 'Pending';
+        const statusCls = task.skipped ? 'bg-slate-700 text-slate-300 border-slate-600' : task.completed ? 'bg-emerald-500/20 text-gta-neonMint border-emerald-500/40 shadow-sm shadow-emerald-500/20' : 'bg-slate-800 text-slate-400 border-white/5 hover:border-slate-600';
+        const canSkip = !task.completed && !task.skipped && state.player.inventory.skipTokens > 0;
+        card.innerHTML = `
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-10 h-10 rounded-xl ${task.color} border flex items-center justify-center text-base flex-shrink-0"><i class="fa-solid ${task.icon}"></i></div>
+            <div class="min-w-0">
+              <h4 class="text-xs font-bold text-white truncate ${task.completed || task.skipped ? 'line-through text-slate-400' : ''}">${escapeHtml(task.title)}</h4>
+              <p class="text-[10px] text-slate-400 mt-0.5 truncate">${escapeHtml(task.schedule)}${task.rewardClaimed && !task.completed && !task.skipped ? ' • reward claimed' : ''}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 flex-shrink-0">
+            ${canSkip ? `<button onclick="useSkipToken('${escapeHtml(task.id)}')" class="text-[10px] font-extrabold px-2 py-1.5 rounded-xl border bg-blue-500/10 text-blue-300 border-blue-500/30 hover:bg-blue-500/20">Skip</button>` : ''}
+            <button onclick="toggleTask('${escapeHtml(task.id)}')" class="text-xs font-extrabold px-3 py-1.5 rounded-xl border transition ${statusCls}">${status}</button>
+          </div>`;
+        container.appendChild(card);
+      });
+    }
+
+    function addXp(amount) {
+      let gained = Math.max(0, Number(amount) || 0);
+      while (gained > 0) {
+        const need = Math.max(1, state.player.targetXp - state.player.currentXp);
+        if (gained < need) {
+          state.player.currentXp += gained;
+          gained = 0;
+        } else {
+          gained -= need;
+          state.player.currentXp = 0;
+          state.player.level += 1;
+          state.player.targetXp += 150;
+          state.player.stars += 1;
+          playSfxCash();
+          showToast(`LEVEL UP! Now Level ${state.player.level}! ★+1`);
+        }
+      }
+    }
+
+    function isXpBoostActive() {
+      return Number(state.player.xpMultiplierUntil) > Date.now();
+    }
+
+    function taskRewardXp() {
+      return isXpBoostActive() ? TASK_XP * 2 : TASK_XP;
+    }
+
+    function toggleTask(id) {
+      const task = state.tasks.find(t => t.id === id);
+      if (!task) return;
+      if (task.skipped) {
+        showToast('Skipped missions cannot be reopened.');
+        return;
+      }
+      if (!task.completed) {
+        task.completed = true;
+        const reward = task.rewardClaimed ? 0 : taskRewardXp();
+        if (!task.rewardClaimed) {
+          addXp(reward);
+          state.player.cash += TASK_CASH;
+          task.rewardClaimed = true;
+          showToast(`Task Complete: +${reward} XP & +$${TASK_CASH}!`);
+        } else {
+          showToast('Task completed. Reward already claimed for today.');
+        }
+        playSfxTaskDone();
+      } else {
+        task.completed = false;
+        playSfxClick();
+        showToast(task.rewardClaimed ? 'Task reopened. Reward stays claimed for today.' : 'Task returned to Pending.');
+      }
+      maybeCompleteDailyMission();
+      renderAll();
+    }
+
+    function useSkipToken(id) {
+      const task = state.tasks.find(t => t.id === id);
+      if (!task || task.completed || task.skipped) return;
+      if (state.player.inventory.skipTokens <= 0) {
+        showToast('No Skip Tokens available.');
+        return;
+      }
+      if (state.skipUsedToday) {
+        showToast('Only one task skip can be used per day.');
+        return;
+      }
+      state.player.inventory.skipTokens -= 1;
+      state.skipUsedToday = true;
+      task.skipped = true;
+      task.completed = false;
+      showToast(`Mission skipped. ${state.player.inventory.skipTokens} token(s) left.`);
+      playSfxTaskDone();
+      maybeCompleteDailyMission();
+      renderAll();
+    }
+
+    function maybeCompleteDailyMission() {
+      const today = getTodayKey();
+      const todayTasks = state.tasks.filter(t => t.date === today || t.date === 'today');
+      const resolved = todayTasks.filter(t => t.completed || t.skipped).length;
+      if (todayTasks.length && resolved === todayTasks.length && !state.dailyMissionClaimed) {
+        state.dailyMissionClaimed = true;
+        addXp(MISSION_XP);
+        state.player.cash += MISSION_CASH;
+        state.player.stars += 1;
+        triggerMissionComplete(true);
+        state.player.currentStreak = Math.max(1, state.player.currentStreak + 1);
+        state.player.longestStreak = Math.max(state.player.longestStreak, state.player.currentStreak);
+      }
+    }
+
+    function updateProgressHeader() {
+      const today = getTodayKey();
+      const tasks = state.tasks.filter(t => t.date === today || t.date === 'today');
+      const total = tasks.length;
+      const completed = tasks.filter(t => t.completed || t.skipped).length;
+      const percentage = total ? Math.round((completed / total) * 100) : 0;
+      const circle = document.getElementById('progressCircle');
+      if (circle) circle.setAttribute('stroke-dasharray', `${percentage}, 100`);
+      const ratioText = document.getElementById('circleRatioText');
+      if (ratioText) ratioText.textContent = `${completed}/${total}`;
+      const pendingBadge = document.getElementById('tasksRemainingBadge');
+      if (pendingBadge) {
+        const rem = total - completed;
+        pendingBadge.textContent = rem === 0 ? 'All Completed!' : `${rem} pending`;
+        if (rem === 0) pendingBadge.classList.add('text-gta-neonMint','border-emerald-500/30');
+        else pendingBadge.classList.remove('text-gta-neonMint','border-emerald-500/30');
+      }
+    }
+
+    function updateAvatar() {
+      const skin = SKIN_PALETTES[state.player.activeSkin] || SKIN_PALETTES.default;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${skin.bg}"/><stop offset="1" stop-color="${skin.accent}"/></linearGradient></defs><rect width="160" height="160" rx="80" fill="url(#g)"/><circle cx="80" cy="60" r="32" fill="${skin.face}"/><path d="M46 58c4-29 64-39 72 0-8-12-21-17-37-17-15 0-27 6-35 17z" fill="${skin.hair}"/><path d="M28 154c4-48 29-67 52-67s48 19 52 67" fill="${skin.jacket}"/><circle cx="68" cy="60" r="3" fill="#111827"/><circle cx="92" cy="60" r="3" fill="#111827"/><path d="M69 75c7 5 15 5 22 0" stroke="#6b3f2a" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M43 131h74" stroke="${skin.accent}" stroke-width="6" opacity=".7"/></svg>`;
+      const src = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+      document.querySelectorAll('img[data-avatar="true"]').forEach(img => img.src = src);
+    }
+
+    function rankTitle(level) {
+      if (level >= 30) return 'Legend';
+      if (level >= 20) return 'Boss';
+      if (level >= 10) return 'Street Veteran';
+      if (level >= 5) return 'Rising Hustler';
+      return 'Rookie';
+    }
+
+    function updateTopBar() {
+      const p = state.player;
+      const pct = Math.min(100, Math.round((p.currentXp / p.targetXp) * 100));
+      const text = {
+        playerName:p.name, badgeLevel:p.level, textLevel:p.level,
+        topXpCurrent:p.currentXp, topXpTarget:p.targetXp, playerCash:p.cash.toLocaleString(), playerStars:p.stars
+      };
+      Object.entries(text).forEach(([id, value]) => { const el = document.getElementById(id); if (el) el.textContent = value; });
+      const bar = document.getElementById('topXpBar'); if (bar) bar.style.width = `${pct}%`;
+      const shopCash = document.getElementById('shopCashDisplay'); if (shopCash) shopCash.textContent = p.cash.toLocaleString();
+      const shopStar = document.getElementById('shopStarDisplay'); if (shopStar) shopStar.textContent = p.stars;
+      const settingsName = document.getElementById('settingsPlayerName'); if (settingsName) settingsName.textContent = p.name;
+      const settingsLevel = document.getElementById('settingsPlayerLevel'); if (settingsLevel) settingsLevel.textContent = p.level;
+      const rank = document.getElementById('settingsRankTitle'); if (rank) rank.textContent = rankTitle(p.level);
+      const settingsBar = document.getElementById('settingsXpBar'); if (settingsBar) settingsBar.style.width = `${pct}%`;
+      const statsName = document.getElementById('statsPlayerName'); if (statsName) statsName.textContent = p.name;
+      const statsLevel = document.getElementById('statsPlayerLevel'); if (statsLevel) statsLevel.textContent = p.level;
+      const statsBar = document.getElementById('statsXpBar'); if (statsBar) statsBar.style.width = `${pct}%`;
+      const statsNext = document.getElementById('statsNextLevel'); if (statsNext) statsNext.textContent = `Next Level: Lv. ${p.level + 1}`;
+      const statsXp = document.getElementById('statsXpText'); if (statsXp) statsXp.textContent = `${p.currentXp} / ${p.targetXp} XP`;
+      const curStreak = document.getElementById('statCurrentStreak'); if (curStreak) curStreak.textContent = p.currentStreak;
+      const longStreak = document.getElementById('statLongestStreak'); if (longStreak) longStreak.textContent = p.longestStreak;
+    }
+
+    function updateShop() {
+      const inv = state.player.inventory;
+      const skip = document.getElementById('skipTokenCount'); if (skip) skip.textContent = inv.skipTokens;
+      const boost = document.getElementById('xpBoostStatus');
+      if (boost) {
+        if (isXpBoostActive()) {
+          const mins = Math.max(0, Math.ceil((state.player.xpMultiplierUntil - Date.now()) / 60000));
+          boost.textContent = `2× active • ${mins}m`;
+          boost.className = 'text-gta-neonMint font-black mt-0.5';
+        } else {
+          boost.textContent = 'Inactive';
+          boost.className = 'text-white font-black mt-0.5';
+        }
+      }
+      const skinStatus = document.getElementById('skinStatus'); if (skinStatus) skinStatus.textContent = `${inv.skins.length} • ${SKIN_LABELS[state.player.activeSkin]}`;
+      const themeStatus = document.getElementById('themePackStatus'); if (themeStatus) themeStatus.textContent = inv.themePackUnlocked ? 'Unlocked' : 'Locked';
+      const xpBtn = document.getElementById('buyXpButton'); if (xpBtn) { xpBtn.textContent = isXpBoostActive() ? 'Active' : 'Buy'; xpBtn.disabled = isXpBoostActive(); xpBtn.style.opacity = xpBtn.disabled ? '0.45' : '1'; }
+      const skipBtn = document.getElementById('buySkipButton'); if (skipBtn) { skipBtn.disabled = false; skipBtn.style.opacity = '1'; }
+      if (state.skipUsedToday) {
+        const note = document.getElementById('shopInventoryPanel');
+        if (note) note.setAttribute('title', "One skip can be used per day. Today's skip has been used.");
+      }
+      const skinBtn = document.getElementById('buySkinButton'); if (skinBtn) { const done = inv.skins.length >= AVAILABLE_SKINS.length; skinBtn.textContent = done ? 'Max' : 'Buy'; skinBtn.disabled = done; skinBtn.style.opacity = done ? '0.45' : '1'; }
+      const themeBtn = document.getElementById('buyThemeButton'); if (themeBtn) { themeBtn.textContent = inv.themePackUnlocked ? 'Owned' : 'Buy'; themeBtn.disabled = inv.themePackUnlocked; themeBtn.style.opacity = inv.themePackUnlocked ? '0.45' : '1'; }
+    }
+
+    function updateThemeUI() {
+      const label = document.getElementById('currentThemeNameLabel');
+      if (label) label.textContent = THEME_LABELS[state.player.theme] || THEME_LABELS.sunset;
+      const access = document.getElementById('themeAccessStatus');
+      if (access) access.textContent = state.player.inventory.themePackUnlocked ? 'All city themes unlocked.' : 'Sunset City is available. Buy the Theme Pack in Shop to unlock the other cities.';
+      document.querySelectorAll('.theme-card').forEach(card => {
+        const m = (card.getAttribute('onclick') || '').match(/applyTheme\('([^']+)'/);
+        if (!m) return;
+        const key = m[1];
+        const locked = key !== 'sunset' && !state.player.inventory.themePackUnlocked;
+        card.style.opacity = locked ? '0.5' : '1';
+        card.style.filter = locked ? 'grayscale(0.75)' : '';
+        card.setAttribute('aria-disabled', locked ? 'true' : 'false');
+        const lock = card.querySelector('.theme-lock');
+        if (locked && !lock) {
+          const badge = document.createElement('span'); badge.className='theme-lock absolute top-2 right-2 bg-slate-950/90 text-amber-400 text-[9px] font-black px-1.5 py-1 rounded-full border border-amber-500/30'; badge.innerHTML='<i class="fa-solid fa-lock"></i>'; card.appendChild(badge);
+        } else if (!locked && lock) lock.remove();
+      });
+    }
+
+    function applyTheme(themeKey, themeLabel) {
+      if (themeKey !== 'sunset' && !state.player.inventory.themePackUnlocked) {
+        showToast('Unlock the Theme Pack in Shop first.');
+        return;
+      }
+      playSfxClick();
+      const app = document.getElementById('appContainer');
+      if (app) app.className = `theme-${themeKey} w-full max-w-[440px] h-[100dvh] sm:h-[890px] sm:rounded-[38px] border border-slate-800 shadow-2xl relative flex flex-col overflow-hidden sm:ring-8 sm:ring-slate-900/60`;
+      state.player.theme = themeKey;
+      const label = document.getElementById('currentThemeNameLabel'); if (label) label.textContent = themeLabel || THEME_LABELS[themeKey] || themeKey;
+      updateThemeUI();
+      saveState();
+      showToast(`Applied theme: ${themeLabel || THEME_LABELS[themeKey] || themeKey}`);
+    }
+
+    function setTaskFilter(filter) {
+      if (!['all','today','upcoming','completed'].includes(filter)) return;
+      playSfxClick();
+      state.currentFilter = filter;
+      document.querySelectorAll('.task-filter-btn').forEach(btn => {
+        const active = btn.getAttribute('data-filter') === filter;
+        btn.className = active
+          ? 'task-filter-btn px-3.5 py-1.5 rounded-full text-xs font-bold border transition bg-gta-neonMint text-slate-950 border-gta-neonMint shadow-sm shadow-gta-neonMint/30'
+          : 'task-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold border transition bg-slate-900/80 text-slate-400 border-white/10 hover:border-slate-600';
+      });
+      renderFullTasks();
+      saveState();
+    }
+
+    function switchView(viewId) {
+      playSfxClick();
+      const views = ['view-home','view-tasks','view-stats','view-shop','view-settings','view-theme'];
+      views.forEach(v => document.getElementById(v)?.classList.add('hidden'));
+      document.getElementById(viewId)?.classList.remove('hidden');
+      const scroll = document.getElementById('mainScrollArea'); if (scroll) scroll.scrollTop = 0;
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const active = btn.getAttribute('data-target') === viewId;
+        btn.classList.toggle('text-gta-neonMint', active);
+        btn.classList.toggle('text-slate-400', !active);
+      });
+      if (viewId === 'view-tasks') renderFullTasks();
+      if (viewId === 'view-home') renderHomeTasks();
+      if (viewId === 'view-stats') updateStats();
+      if (viewId === 'view-shop') updateShop();
+      if (viewId === 'view-theme') updateThemeUI();
+    }
+
+    function switchShopTab(tab) {
+      playSfxClick();
+      const itemsTab = document.getElementById('shopTabItems');
+      const bgTab = document.getElementById('shopTabBg');
+      const itemsContainer = document.getElementById('shopItemsContainer');
+      const bgContainer = document.getElementById('shopBgContainer');
+      const items = tab === 'items';
+      itemsTab?.classList.toggle('bg-gta-neonMint', items);
+      itemsTab?.classList.toggle('text-slate-950', items);
+      itemsTab?.classList.toggle('text-slate-400', !items);
+      bgTab?.classList.toggle('bg-gta-neonMint', !items);
+      bgTab?.classList.toggle('text-slate-950', !items);
+      bgTab?.classList.toggle('text-slate-400', items);
+      itemsContainer?.classList.toggle('hidden', !items);
+      bgContainer?.classList.toggle('hidden', items);
+    }
+
+    function purchaseItem(name, cost, type) {
+      const p = state.player;
+      if (p.cash < cost) { showToast(`Not enough cash! Need $${cost}`); return; }
+      const inv = p.inventory;
+      if (type === 'theme' && inv.themePackUnlocked) { showToast('Theme Pack already owned.'); return; }
+      if (type === 'skin' && inv.skins.length >= AVAILABLE_SKINS.length) { showToast('All skins already owned.'); return; }
+      if (type === 'xp' && isXpBoostActive()) { showToast('XP Boost is already active.'); return; }
+      p.cash -= cost;
+      playSfxCash();
+      if (type === 'xp') {
+        p.xpMultiplierUntil = Date.now() + 60 * 60 * 1000;
+        showToast(`${name} activated: 2× XP for 1 hour.`);
+      } else if (type === 'skip') {
+        inv.skipTokens += 1;
+        showToast(`${name} added. Use it from the Tasks screen.`);
+      } else if (type === 'skin') {
+        const next = AVAILABLE_SKINS.find(s => !inv.skins.includes(s));
+        if (next) {
+          inv.skins.push(next);
+          p.activeSkin = next;
+          updateAvatar();
+          showToast(`${SKIN_LABELS[next]} skin unlocked and equipped.`);
+        }
+      } else if (type === 'theme') {
+        inv.themePackUnlocked = true;
+        showToast('Theme Pack unlocked. All city themes are available.');
+      }
+      saveState();
+      renderAll();
+    }
+
+    function triggerMissionComplete(award = false) {
+      playSfxMissionPassed();
+      if (award) {
+        // Rewards are applied in maybeCompleteDailyMission(); this flag only controls the UI flow.
+      }
+      try { if (typeof confetti === 'function') confetti({ particleCount:80, spread:70, origin:{y:0.6} }); } catch (e) {}
+      const modal = document.getElementById('missionCompleteModal');
+      modal?.classList.remove('hidden'); modal?.classList.add('flex');
+    }
+
+    function closeMissionComplete() {
+      playSfxClick();
+      const modal = document.getElementById('missionCompleteModal');
+      modal?.classList.add('hidden'); modal?.classList.remove('flex');
+    }
+
+    function openAddTaskModal() {
+      playSfxClick();
+      document.getElementById('newTaskTitle').value = '';
+      document.getElementById('newTaskTime').value = '08:00 AM - 09:00 AM';
+      const modal = document.getElementById('addTaskModal'); modal?.classList.remove('hidden'); modal?.classList.add('flex');
+      setTimeout(() => document.getElementById('newTaskTitle')?.focus(), 50);
+    }
+
+    function closeAddTaskModal() {
+      playSfxClick();
+      const modal = document.getElementById('addTaskModal'); modal?.classList.add('hidden'); modal?.classList.remove('flex');
+    }
+
+    function taskIconStyle(category) {
+      const map = {
+        study:['fa-book-open','text-emerald-400 bg-emerald-500/10 border-emerald-500/30'],
+        read:['fa-book-bookmark','text-cyan-400 bg-cyan-500/10 border-cyan-500/30'],
+        water:['fa-droplet','text-blue-400 bg-blue-500/10 border-blue-500/30'],
+        food:['fa-utensils','text-amber-400 bg-amber-500/10 border-amber-500/30'],
+        night:['fa-moon','text-purple-400 bg-purple-500/10 border-purple-500/30'],
+        code:['fa-laptop-code','text-indigo-400 bg-indigo-500/10 border-indigo-500/30'],
+        workout:['fa-dumbbell','text-emerald-400 bg-emerald-500/10 border-emerald-500/30']
+      };
+      return map[category] || map.workout;
+    }
+
+    function saveNewTask() {
+      const titleEl = document.getElementById('newTaskTitle');
+      const timeEl = document.getElementById('newTaskTime');
+      const categoryEl = document.getElementById('newTaskCategory');
+      const title = titleEl?.value.trim() || '';
+      if (!title) { showToast('Please enter a task title!'); titleEl?.focus(); return; }
+      const schedule = timeEl?.value.trim() || 'All Day';
+      const category = categoryEl?.value || 'workout';
+      const [icon, color] = taskIconStyle(category);
+      state.tasks.push({
+        id: window.crypto?.randomUUID ? crypto.randomUUID() : `task-${Date.now()}-${Math.random().toString(36).slice(2,7)}`,
+        title, schedule, category, icon, color,
+        completed:false, skipped:false, rewardClaimed:false, date:getTodayKey(), custom:true
+      });
+      closeAddTaskModal();
+      playSfxClick();
+      saveState();
+      renderAll();
+      showToast('New Mission Added and saved.');
+    }
+
+    function resetDailyTasks() {
+      playSfxClick();
+      const today = getTodayKey();
+      state.tasks.forEach(t => {
+        if (t.date === today || t.date === 'today') {
+          t.completed = false;
+          t.skipped = false;
+          // Do NOT clear rewardClaimed: reset must never become a reward exploit.
+        }
+      });
+      // Keep the mission-claim flag unchanged so a manual reset can never award the daily mission twice.
+      renderAll();
+      saveState();
+      showToast('Daily tasks reset to Pending. Already-claimed rewards stay protected.');
+    }
+
+    function promptChangeName() {
+      playSfxClick();
+      const input = document.getElementById('playerNameInput');
+      if (input) input.value = state.player.name;
+      const modal = document.getElementById('nameModal'); modal?.classList.remove('hidden'); modal?.classList.add('flex');
+      setTimeout(() => input?.focus(), 50);
+    }
+
+    function closeNameModal() {
+      playSfxClick();
+      const modal = document.getElementById('nameModal'); modal?.classList.add('hidden'); modal?.classList.remove('flex');
+    }
+
+    function savePlayerName() {
+      const input = document.getElementById('playerNameInput');
+      const name = input?.value.trim().replace(/\s+/g, ' ') || '';
+      if (!name) { showToast('Player name cannot be empty.'); return; }
+      state.player.name = name.slice(0, 24);
+      closeNameModal();
+      saveState();
+      renderAll();
+      showToast(`Player name updated to ${state.player.name}.`);
+    }
+
+    let toastTimeout = null;
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      const txt = document.getElementById('toastMsg');
+      if (!box || !txt) return;
+      txt.textContent = msg;
+      box.classList.remove('opacity-0','-translate-y-4');
+      box.classList.add('opacity-100','translate-y-0');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        box.classList.remove('opacity-100','translate-y-0');
+        box.classList.add('opacity-0','-translate-y-4');
+      }, 2800);
+    }
+
+    function updateClockElements(now = new Date()) {
+      const options = { weekday:'short', day:'numeric', month:'short', year:'numeric' };
+      const dateStr = now.toLocaleDateString('en-US', options);
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2,'0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12;
+      const timeStr = `${String(hours).padStart(2,'0')}:${minutes} ${ampm}`;
+      ['liveDateStr','statsDateStr'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = dateStr; });
+      ['liveTimeStr','statsTimeStr'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = timeStr; });
+    }
+
+    function initClock() {
+      const update = () => { updateClockElements(); runNotifications(); updateShop(); };
+      update();
+      setInterval(update, 30000);
+    }
+
+    function setNotificationInput(enabled) {
+      const input = document.getElementById('notifyToggle'); if (input) input.checked = enabled;
+    }
+
+    async function toggleNotifications(enabled) {
+      if (!enabled) {
+        state.player.notifications = false;
+        saveState();
+        setNotificationInput(false);
+        showToast('Daily reminders turned off.');
+        return;
+      }
+      if (!('Notification' in window)) {
+        state.player.notifications = false;
+        setNotificationInput(false);
+        showToast('This browser does not support notifications.');
+        return;
+      }
+      try {
+        let permission = Notification.permission;
+        if (permission !== 'granted') permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+          state.player.notifications = false;
+          setNotificationInput(false);
+          saveState();
+          showToast('Notification permission was not granted.');
+          return;
+        }
+        state.player.notifications = true;
+        saveState();
+        showToast('Daily reminders enabled. Keep the app open for scheduled alerts.');
+        runNotifications();
+      } catch (e) {
+        state.player.notifications = false;
+        setNotificationInput(false);
+        showToast('Could not enable notifications in this browser mode.');
+      }
+    }
+
+    function runNotifications(now = new Date()) {
+      if (!state.player.notifications || !('Notification' in window) || Notification.permission !== 'granted') return;
+      if (getTodayKey(now) !== state.activeDate) return;
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      state.tasks.filter(t => !t.completed && !t.skipped && t.date === state.activeDate).forEach(task => {
+        const start = parseStartMinutes(task.schedule);
+        if (start === null || currentMinutes < start || currentMinutes > start + 1) return;
+        const key = `${state.activeDate}:${task.id}:${start}`;
+        if (state.notificationSent[key]) return;
+        state.notificationSent[key] = true;
+        try {
+          const note = new Notification(`MISSION REMINDER: ${task.title}`, { body:`Scheduled now: ${task.schedule}`, tag:key });
+          note.onclick = () => window.focus();
+        } catch (e) {}
+        saveState();
+      });
+    }
+
+    function updateStats() {
+      const today = getTodayKey();
+      const current = state.tasks.filter(t => t.date === today || t.date === 'today');
+      const currentPct = current.length ? Math.round((current.filter(t => t.completed || t.skipped).length / current.length) * 100) : 0;
+      const days = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        const key = getTodayKey(d);
+        const entry = key === today ? { percentage: currentPct } : state.history[key];
+        days.push({ date:d, key, percentage:entry?.percentage || 0 });
+      }
+      const avg = days.length ? Math.round(days.reduce((sum,d) => sum + d.percentage,0) / days.length) : 0;
+      const avgEl = document.getElementById('weeklyAvgPct'); if (avgEl) avgEl.textContent = `${avg}%`;
+      const slots = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+      slots.forEach((day, i) => {
+        const d = days[i];
+        const pct = d.percentage;
+        const dayName = d.date.toLocaleDateString('en-US', { weekday:'short' });
+        const dayEl = document.getElementById(`week${day}Day`); if (dayEl) dayEl.textContent = dayName;
+        const label = document.getElementById(`week${day}Label`); if (label) label.textContent = `${pct}%`;
+        const bar = document.getElementById(`week${day}Bar`); if (bar) bar.style.height = `${Math.max(4,pct)}%`;
+      });
+    }
+
+    function updateThemeAndSoundControls() {
+      const sound = document.getElementById('soundToggle'); if (sound) sound.checked = soundEnabled;
+      setNotificationInput(state.player.notifications);
+      const app = document.getElementById('appContainer');
+      const key = state.player.theme || 'sunset';
+      if (app) app.className = `theme-${key} w-full max-w-[440px] h-[100dvh] sm:h-[890px] sm:rounded-[38px] border border-slate-800 shadow-2xl relative flex flex-col overflow-hidden sm:ring-8 sm:ring-slate-900/60`;
+    }
+
+    // Override the earlier audio-toggle helper with a persistent version.
+    function toggleSound(val) {
+      soundEnabled = !!val;
+      saveState();
+      showToast(soundEnabled ? 'Sound effects enabled' : 'Sound effects muted');
+    }
+
+    function renderAll() {
+      renderHomeTasks();
+      renderFullTasks();
+      updateProgressHeader();
+      updateTopBar();
+      updateShop();
+      updateStats();
+      updateThemeUI();
+      updateAvatar();
+      updateThemeAndSoundControls();
+      document.querySelectorAll('.task-filter-btn').forEach(btn => {
+        const active = btn.getAttribute('data-filter') === state.currentFilter;
+        btn.className = active
+          ? 'task-filter-btn px-3.5 py-1.5 rounded-full text-xs font-bold border transition bg-gta-neonMint text-slate-950 border-gta-neonMint shadow-sm shadow-gta-neonMint/30'
+          : 'task-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold border transition bg-slate-900/80 text-slate-400 border-white/10 hover:border-slate-600';
+      });
+      saveState();
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeMissionComplete();
+        closeAddTaskModal();
+        closeNameModal();
+      }
+      if (e.key === 'Enter' && document.getElementById('nameModal')?.classList.contains('flex')) savePlayerName();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      prepareForToday();
+      // Imported data may use 'today' instead of the actual date; normalize it in-place.
+      state.tasks.forEach(t => { if (t.date === 'today') t.date = state.activeDate; });
+      if (!state.player.notifications) setNotificationInput(false);
+      renderAll();
+      initClock();
+      updateThemeAndSoundControls();
+      updateAvatar();
+      runNotifications();
+    });
+  </script>
+</body>
+</html>
